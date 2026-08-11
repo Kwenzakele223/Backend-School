@@ -2430,7 +2430,10 @@ function checkAnswer(ch, c, it){
   const code = box.value;
   it.lastCode = code;
 
-  const results = c.checks.map(chk=>({label:chk.l, passed: chk.t(code)}));
+  const results = c.checks.map(chk=>{
+    const passed = (chk.t instanceof RegExp) ? chk.t.test(code) : chk.t(code);
+    return {label:chk.l, passed};
+  });
   const allPassed = results.every(r=>r.passed);
   it.lastChecklist = results;
 
