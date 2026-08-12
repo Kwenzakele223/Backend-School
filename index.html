@@ -221,6 +221,25 @@
   }
   .join-diagrams svg{overflow:visible;}
   .concept{margin-bottom:var(--grid);}
+  .section-divider{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin:calc(var(--grid) * 1.4) 0 var(--grid) 0;
+  }
+  .section-divider::before, .section-divider::after{
+    content:"";
+    flex:1;
+    height:2px;
+    background:repeating-linear-gradient(90deg, var(--red) 0 6px, transparent 6px 11px);
+  }
+  .section-divider span{
+    font-family:'Caveat',cursive;
+    font-size:26px;
+    color:var(--red);
+    white-space:nowrap;
+    transform:rotate(-1deg);
+  }
   .diagram-box{
     background:var(--card);
     border:1.5px solid var(--line);
@@ -317,6 +336,8 @@
     line-height:1.5;
     white-space:pre-wrap;
     word-wrap:break-word;
+    tab-size:4;
+    -moz-tab-size:4;
     color:var(--ink);
     background:transparent;
     box-shadow:none;
@@ -338,6 +359,8 @@
     resize:none;
     white-space:pre-wrap;
     word-wrap:break-word;
+    tab-size:4;
+    -moz-tab-size:4;
     z-index:2;
   }
   textarea.answer-box:focus{outline:2px solid var(--blue); outline-offset:1px;}
@@ -380,10 +403,26 @@
     padding:14px 18px;
     margin-bottom:16px;
   }
-  .proj-step.done{border-left-color:var(--green);}
+  .capstone-picker{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:var(--grid);
+  }
+  .capstone-pill{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12.5px;
+    font-weight:700;
+    padding:8px 16px;
+    border:2px solid var(--line);
+    border-radius:20px;
+    background:var(--card);
+    color:var(--ink-soft);
+    cursor:pointer;
+  }
+  .capstone-pill:hover{border-color:var(--blue); color:var(--blue);}
+  .capstone-pill.active{border-color:var(--red); color:var(--red); background:#fff;}
   .proj-step-head{display:flex; align-items:center; gap:10px; margin-bottom:4px;}
-  .proj-check{display:flex; align-items:center; gap:6px; cursor:pointer;}
-  .proj-check input{width:17px; height:17px; cursor:pointer; accent-color:var(--green);}
   .proj-num{
     font-family:'JetBrains Mono',monospace;
     font-size:11px;
@@ -391,9 +430,9 @@
     border:1.3px solid var(--ink-soft);
     border-radius:50%;
     width:20px;height:20px;
+    flex-shrink:0;
     display:flex;align-items:center;justify-content:center;
   }
-  .proj-step.done .proj-num{background:var(--green); border-color:var(--green); color:#fff;}
   .proj-step h4{
     font-family:'Caveat',cursive;
     font-size:22px;
@@ -716,7 +755,8 @@ const CHAPTERS = [
     {name:'A common pitfall: deadlock', explain:'A deadlock happens when two threads each hold something the other needs, and both wait forever — like two people each refusing to hand over their half of a pair of scissors until they get the other half first. The synchronized chapter covers this in more depth.', code:'// Thread A holds lock 1, waiting for lock 2\n// Thread B holds lock 2, waiting for lock 1 — neither ever proceeds'},
     {name:'Callable and Future', explain:"A Runnable can't return a result or throw a checked exception. Callable can — you submit it to an ExecutorService and get back a Future, which is like a claim ticket you can later call .get() on to collect the actual result once it's ready.", code:'Future<Integer> future = pool.submit(() -> 2 + 2);\nint result = future.get(); // waits for the result if not ready yet'},
     {name:'Interrupting a thread', explain:"You can't force-kill a thread directly, but you can politely ask it to stop with interrupt(). It's then up to that thread's code to notice the interruption (often via an InterruptedException) and actually wind down.", code:'worker.interrupt();\n// inside the thread: catch (InterruptedException e) { /* stop cleanly */ }'},
-    {name:'Thread-safe collections', explain:'Regular collections like ArrayList and HashMap are not safe to share across threads without extra locking. java.util.concurrent provides ready-made thread-safe alternatives, like ConcurrentHashMap, that handle the locking internally.', code:'Map<String,Integer> scores = new ConcurrentHashMap<>();\nscores.put("Milo", 10); // safe even with multiple threads writing'}
+    {name:'Thread-safe collections', explain:'Regular collections like ArrayList and HashMap are not safe to share across threads without extra locking. java.util.concurrent provides ready-made thread-safe alternatives, like ConcurrentHashMap, that handle the locking internally.', code:'Map<String,Integer> scores = new ConcurrentHashMap<>();\nscores.put("Milo", 10); // safe even with multiple threads writing'},
+    {name:'Naming, checking, and daemon threads', explain:'A few small but genuinely useful Thread methods: setName()/getName() label a thread so it is easier to identify in logs or a debugger; isAlive() tells you whether a thread has finished running yet; setDaemon(true), called BEFORE start(), marks a thread as background work that should not stop the whole program from exiting — the JVM kills daemon threads automatically once every non-daemon thread is done.', code:'Thread t = new Thread(() -> System.out.println("working"));\nt.setName("Worker-1");\nt.setDaemon(true);   // must be called before start()\nt.start();\n\nSystem.out.println(t.getName());  // "Worker-1"\nSystem.out.println(t.isAlive());  // true while it is still running'}
   ],
   challenges:[
     {p:'Create a class called <span class="inline-code">Greeter</span> that extends <span class="inline-code">Thread</span>. Inside run(), print "Hello Thread". Then create one and start it.',
@@ -895,6 +935,7 @@ const CHAPTERS = [
     {name:'IP addresses and DNS', explain:'Every computer on a network has a numeric IP address, like a street address. DNS is the phonebook that translates a human-readable name (like example.com) into that numeric address, so you never have to memorize it yourself.', code:'// example.com --DNS lookup--> 93.184.216.34'},
     {name:'Protocols stack on top of each other', explain:"No single protocol does everything. IP handles addressing (getting data to the right computer), TCP handles reliable delivery on top of that, and HTTP handles the actual web request on top of TCP. It's layers, not one protocol doing it all.", code:'// HTTP sits on top of TCP, which sits on top of IP'},
     {name:'The main HTTP methods', explain:'HTTP methods describe the kind of action being requested: GET reads data, POST creates something new, PUT replaces something entirely, PATCH updates part of it, and DELETE removes it.', code:'GET    -> read data\nPOST   -> create data\nPUT    -> replace data\nDELETE -> remove data'},
+    {name:'Choosing a method in real Java code', explain:'When building an HttpRequest, .GET() explicitly picks that method (it is also the default if you leave it out entirely), and .build() is what actually finishes constructing the request object — nothing gets sent until later, when it is passed to client.send(...).', code:'HttpRequest request = HttpRequest.newBuilder()\n    .uri(URI.create("https://api.example.com/dogs"))\n    .GET()\n    .build();'},
     {name:'Status code families', explain:'Status codes are grouped by their first digit: 2xx means success, 3xx means redirect (go look somewhere else), 4xx means the client made a mistake (like asking for something that does not exist), and 5xx means the server itself broke.', code:'200 OK        — success\n404 Not Found — client error\n500 Server Error — server error'},
     {name:'Cookies and sessions', explain:"HTTP itself has no memory — every request is a fresh, unrelated conversation. Cookies are small pieces of data the server asks the browser to hold onto and send back with every future request, which is how a site remembers you're logged in between page loads.", code:'// Set-Cookie: sessionId=abc123'},
     {name:'WebSockets', explain:'Regular HTTP is request-then-response — the client always speaks first. A WebSocket upgrades a connection into a persistent, two-way channel where either side can send a message at any time, which is what powers things like live chat and real-time notifications.', code:'ws://example.com/chat  // or wss:// for the encrypted version'},
@@ -957,6 +998,8 @@ const CHAPTERS = [
     {name:'The six JSON data types', explain:'JSON only has six kinds of values: string, number, boolean, null, object, and array. Everything in JSON, no matter how complicated it looks, is built out of just these six building blocks.', code:'{ "text": "hi", "num": 3, "yes": true, "nothing": null, "list": [1,2], "nested": {} }'},
     {name:'Common Java JSON libraries', explain:'org.json (used in this notebook) is simple and lightweight. Jackson and Gson are two other very popular libraries that do the same core job — turning JSON text into objects and back — with slightly different APIs and more advanced features.', code:'// org.json, Jackson, and Gson all solve the same problem, differently'},
     {name:'Formatting is just for humans', explain:'Whitespace, line breaks, and indentation in JSON only exist to make it easier for people to read. A parser treats a tightly packed one-liner and a nicely indented version as exactly the same data.', code:'{"a":1}\n// means exactly the same thing as:\n{\n  "a": 1\n}'},
+    {name:'Reading booleans and optional fields', explain:'getBoolean(key) reads a true/false field the same way getString() reads text. For a field that might not even be there, opt-style methods like optString(key, fallback) return a default value instead of throwing an error — much safer than assuming every field always exists.', code:'boolean friendly = dog.getBoolean("friendly");\nString nickname = dog.optString("nickname", "none"); // no error if missing'},
+    {name:'Looping through a JSONArray', explain:'A JSONArray does not work like a normal Java array or List — you read one element at a time with getJSONObject(i) inside a regular for loop, checking against .length() instead of .length or .size().', code:'for (int i = 0; i < arr.length(); i++) {\n    JSONObject dog = arr.getJSONObject(i);\n    System.out.println(dog.getString("name"));\n}'},
     {name:'JSONArray, not just JSONObject', explain:'When the top-level JSON is a list instead of a labelled object — like a list of dogs — org.json gives you a JSONArray instead, with its own methods: length() for the size, and getJSONObject(i) to pull out the item at a given position.', code:'JSONArray dogs = new JSONArray(text);\nint howMany = dogs.length();'},
     {name:'Escaping special characters', explain:'Some characters can\'t appear raw inside a JSON string — a literal quote or backslash would break the format. They get "escaped" with a backslash, like \\" for a quote mark or \\n for a line break, so the parser knows to treat them as plain text, not structure.', code:'{"quote": "she said \\"hi\\""}'},
     {name:'JSON Schema', explain:'A JSON Schema is a separate JSON document that describes what "valid" JSON is supposed to look like for a given use case — which fields are required, what type each one should be — so data can be validated automatically instead of just hoped to be correct.', code:'{ "required": ["name", "age"], "properties": { "age": { "type": "number" } } }'}
@@ -1017,6 +1060,7 @@ const CHAPTERS = [
     {name:'Serializable vs Externalizable', explain:'Serializable is automatic — Java figures out the details of freezing and thawing your object for you. Externalizable gives you full manual control over exactly what gets written and read, which is more work but useful when you need tighter control over the format.', code:'class Player implements Externalizable {\n    // you write your own writeExternal()/readExternal()\n}'},
     {name:'Versioning risk', explain:"If you change a class's fields after some objects have already been saved, deserializing those old files later can break or behave unexpectedly. serialVersionUID and careful, backward-compatible field changes help manage this over time.", code:'private static final long serialVersionUID = 1L;'},
     {name:'A security note', explain:'Deserializing data from a source you do not trust can be genuinely dangerous — a specially crafted byte stream can sometimes trigger unexpected behavior during the process. Never blindly deserialize input from somewhere you do not control.', code:'// never call readObject() on data from an untrusted source without validation'},
+    {name:'Handling the checked exceptions', explain:'readObject() can fail two different ways: IOException if something goes wrong reading the file or stream itself, and ClassNotFoundException if the saved data refers to a class that no longer exists on the classpath. Both are checked exceptions, so real code has to catch (or declare) them — a multi-catch with a pipe handles both in one block.', code:'try {\n    Player p = (Player) in.readObject();\n} catch (IOException | ClassNotFoundException e) {\n    e.printStackTrace();\n}'},
     {name:'Customizing serialization', explain:'For unusual cases, a Serializable class can define its own private writeObject() and readObject() methods to take manual control over exactly how it gets frozen and thawed — useful when a field needs special handling that the default behavior can\'t do on its own.', code:'private void writeObject(ObjectOutputStream out) throws IOException {\n    out.defaultWriteObject();\n    // extra custom logic here\n}'},
     {name:'Alternatives to Java serialization', explain:"Java's built-in serialization only really works between Java programs, and carries some of the security risks mentioned above. Formats like JSON (covered in this notebook) or Protocol Buffers are often preferred for saving or sending data, since they're portable across languages and easier to inspect.", code:'// Java Serializable: Java-to-Java, binary\n// JSON / Protobuf: cross-language, more transparent'}
   ],
@@ -1058,7 +1102,7 @@ const CHAPTERS = [
      s:'ArrayList<Player> players = (ArrayList<Player>) in.readObject();',
      m:['Casting to just ArrayList without the <Player> — it compiles with a warning, but it is safer and clearer to include it.','Forgetting readObject() can throw both IOException and ClassNotFoundException.']},
     {p:'Wrap a serialization read in a try/catch that handles both <span class="inline-code">IOException</span> and <span class="inline-code">ClassNotFoundException</span>.',
-     checks:[{l:'Has a try block', t:/try\s*\{/i},{l:'Catches IOException', t:/catch\s*\(\s*IOException/i},{l:'Catches ClassNotFoundException', t:/catch\s*\(\s*ClassNotFoundException/i}],
+     checks:[{l:'Has a try block', t:/try\s*\{/i},{l:'Catches IOException', t:/catch\s*\([^)]*IOException/i},{l:'Catches ClassNotFoundException', t:/catch\s*\([^)]*ClassNotFoundException/i}],
      s:'try {\n    Player p = (Player) in.readObject();\n} catch (IOException | ClassNotFoundException e) {\n    e.printStackTrace();\n}',
      m:['Only catching IOException and forgetting ClassNotFoundException — readObject() can throw either one.','Catching Exception broadly instead of naming the real ones — it works, but hides which specific thing went wrong.']}
   ]
@@ -1197,11 +1241,37 @@ const CHAPTERS = [
   concepts:[
     {name:'What CI/CD is', explain:'Continuous Integration / Continuous Deployment is an assembly line for code: every time someone pushes a change, a robot automatically builds it, tests it, and — if everything passes — ships it, instead of a person doing all of that by hand each time.', code:'// triggered automatically on every push, not run by hand'},
     {name:'Stages run in order', explain:'A pipeline is broken into stages like build, test, and deploy. Each stage only runs if the one before it succeeded, so a broken build never even reaches the test stage, and broken tests never reach deploy.', code:'// build -> test -> deploy, each gated on the last one passing'},
-    {name:'Described in YAML', explain:'Most pipelines are configured in a YAML file: plain text, strict indentation, listing exactly what should run and when.', code:'on:\n  push:\n    branches: [main]'},
+    {name:'A complete pipeline, explained line by line (GitHub Actions)', explain:'No fragments this time — here is a real, complete, working pipeline for a small Java project. Read the code block below top to bottom, then walk through exactly what each part means: <ul style="margin:10px 0 0 18px; padding:0;">'
+      +'<li style="margin-bottom:6px;"><code>name: Java CI</code> — just a label. This is the name that shows up in GitHub\'s "Actions" tab, so you can tell this pipeline apart from any others in the same project.</li>'
+      +'<li style="margin-bottom:6px;"><code>on:</code> — the trigger section. Everything nested under it answers one question: WHEN should this pipeline run?</li>'
+      +'<li style="margin-bottom:6px;"><code>push: branches: [main]</code> — run automatically every time someone pushes a commit onto the main branch.</li>'
+      +'<li style="margin-bottom:6px;"><code>pull_request: branches: [main]</code> — ALSO run whenever someone opens a pull request targeting main. This is what catches a broken change before it even gets merged, not after.</li>'
+      +'<li style="margin-bottom:6px;"><code>jobs:</code> — a pipeline is made of one or more jobs. This one has exactly one, and it is named "build" (that name is something you choose, not a keyword).</li>'
+      +'<li style="margin-bottom:6px;"><code>runs-on: ubuntu-latest</code> — tells GitHub which operating system to spin up a brand-new, empty virtual machine with, just to run these steps on.</li>'
+      +'<li style="margin-bottom:6px;"><code>steps:</code> — the ordered list of individual actions this job performs, top to bottom. If any single step fails, the whole job stops immediately right there — later steps never run.</li>'
+      +'<li style="margin-bottom:6px;"><code>uses: actions/checkout@v4</code> — the very first step always has to fetch your actual code onto that empty machine. Skip this, and every step after it has no code to work with at all.</li>'
+      +'<li style="margin-bottom:6px;"><code>uses: actions/setup-java@v4</code> with <code>java-version: \'17\'</code> — installs a JDK on that machine, matching whatever version your project actually needs.</li>'
+      +'<li style="margin-bottom:6px;"><code>run: mvn compile</code> — this is a "run" step instead of a "uses" step: instead of a pre-built action, it just types a real command, exactly like you would in your own terminal.</li>'
+      +'<li style="margin-bottom:6px;"><code>run: mvn test</code> — runs the JUnit tests. If even a single test fails, this step (and the whole job) fails right here — "package" below never even runs.</li>'
+      +'<li style="margin-bottom:6px;"><code>run: mvn package</code> — only reached if every step above it succeeded. Bundles the finished, already-tested code into a runnable jar.</li>'
+      +'</ul>',
+     code:'name: Java CI\n\non:\n  push:\n    branches: [main]\n  pull_request:\n    branches: [main]\n\njobs:\n  build:\n    runs-on: ubuntu-latest\n\n    steps:\n      - name: Check out the code\n        uses: actions/checkout@v4\n\n      - name: Set up Java\n        uses: actions/setup-java@v4\n        with:\n          java-version: \'17\'\n          distribution: \'temurin\'\n\n      - name: Build with Maven\n        run: mvn compile\n\n      - name: Run tests\n        run: mvn test\n\n      - name: Package the app\n        run: mvn package'},
+    {name:'The same pipeline, in GitLab CI', explain:'GitLab structures the exact same idea a little differently. This does the same job as the GitHub Actions file above: <ul style="margin:10px 0 0 18px; padding:0;">'
+      +'<li style="margin-bottom:6px;"><code>stages:</code> — lists the stages in the order they must run: build first, then test. This replaces GitHub\'s implicit top-to-bottom step order with an explicit list.</li>'
+      +'<li style="margin-bottom:6px;"><code>build_job:</code> and <code>test_job:</code> — these are jobs, named whatever you like (just like GitHub\'s "build" job name was your choice).</li>'
+      +'<li style="margin-bottom:6px;"><code>stage: build</code> / <code>stage: test</code> — assigns each job to one of the stages listed above. GitLab automatically waits for every job in "build" to succeed before starting anything in "test".</li>'
+      +'<li style="margin-bottom:6px;"><code>image: maven:3.9-eclipse-temurin-17</code> — instead of separate "install Java" steps like GitHub Actions used, GitLab just starts from a ready-made Docker image that already has Maven and Java 17 installed.</li>'
+      +'<li style="margin-bottom:6px;"><code>script:</code> — the actual list of commands to run, the direct equivalent of GitHub\'s <code>run:</code> lines.</li>'
+      +'</ul>Same guarantee either way: if build_job fails, test_job never runs at all.',
+     code:'stages:\n  - build\n  - test\n\nbuild_job:\n  stage: build\n  image: maven:3.9-eclipse-temurin-17\n  script:\n    - mvn compile\n\ntest_job:\n  stage: test\n  image: maven:3.9-eclipse-temurin-17\n  script:\n    - mvn test'},
     {name:'CI vs CD vs continuous deployment', explain:'Continuous Integration automatically builds and tests every change. Continuous Delivery goes a step further and automatically prepares a release that is ready to deploy. Continuous Deployment goes all the way and deploys it too, with no human clicking "go".', code:'// CI: build+test automatically\n// CD (delivery): also package a releasable build\n// continuous deployment: also ship it, automatically'},
     {name:'Common pipeline tools', explain:'GitHub Actions, GitLab CI, and Jenkins are three widely used tools. They look different on the surface, but they all share the same underlying idea: stages, triggered by events, running in order.', code:'// different tools, same core idea: triggers -> stages -> steps'},
     {name:'Environments', explain:'Pipelines often deploy to more than one environment, in order — commonly dev, then staging, then production — each one a safer checkpoint before the next, so problems get caught before real users ever see them.', code:'// dev -> staging -> production'},
     {name:'Secrets management', explain:'Real pipelines never hardcode passwords or API keys directly in the YAML file. Instead they pull them at run time from a secure secrets store built into the pipeline tool.', code:'// secrets are referenced by name, never typed out in plain text in the file'},
+    {name:'Building a Docker image inside a pipeline', explain:'A step can run any shell command, including docker build — the same command from the Docker chapter, just triggered automatically instead of typed by hand. The -t flag still tags the image with a name, exactly as before.', code:'- name: Build Docker image\n  run: docker build -t myapp .'},
+    {name:'Environment variables in a pipeline', explain:'An env: section defines variables the pipeline\'s steps can read, the same idea as an environment variable on your own machine — useful for things like a database URL that changes between dev and production.', code:'env:\n  API_KEY: my-secret-value'},
+    {name:'Caching dependencies', explain:'Downloading the same Maven dependencies on every single run wastes time. A cache step saves a folder (like ~/.m2, where Maven keeps its downloads) between runs, keyed by something like the pom.xml contents, so unchanged dependencies do not get re-downloaded every time.', code:'- name: Cache Maven dependencies\n  uses: actions/cache@v4\n  with:\n    path: ~/.m2\n    key: maven-${{ hashFiles(\'pom.xml\') }}'},
+    {name:'Running a step only on failure', explain:'Steps can carry a condition. if: failure() means "only run this step if an earlier step in the job has already failed" — the standard way to send a notification only when something actually went wrong, instead of on every single run.', code:'- name: Notify on failure\n  if: failure()\n  run: echo "Build failed, notifying team"'},
     {name:'Build artifacts', explain:'An artifact is a file (or set of files) produced by one stage that a later stage needs, like a compiled jar built in the "build" stage that the "deploy" stage then actually ships. Pipelines pass artifacts along between stages instead of rebuilding from scratch every time.', code:'// build stage produces: target/app.jar\n// deploy stage picks up that same artifact and ships it'},
     {name:'Rollbacks and blue-green deployment', explain:'If a deployment goes wrong, a rollback switches back to the last known-good version. Blue-green deployment keeps two identical environments (blue and green) and switches traffic between them instantly, so a bad release can be undone by just flipping back, with no downtime.', code:'// blue: currently live, v1\n// green: newly deployed, v2 — switch traffic once verified, or flip back if not'},
     {name:'Branch strategies', explain:'Different branches often trigger different pipeline behavior — a feature branch might just run tests, while merging to main might trigger a full build-test-deploy pipeline. This keeps experimental work from accidentally reaching production.', code:'on:\n  push:\n    branches: [main]      # full deploy pipeline\n  pull_request: {}        # tests only, no deploy'}
@@ -1317,21 +1387,27 @@ const CHAPTERS = [
   ]
 },
 
-{ id:'databases', tab:'Databases', title:'Databases & RDBMS', blurb:'Storing data in tables that can talk to each other.',
+{ id:'databases', tab:'Databases', title:'Databases, JDBC & ORM', blurb:'SQL commands organized by category, plus how Java actually talks to a database — all in one place.',
   links:[
     {label:'W3Schools — SQL Tutorial', url:'https://www.w3schools.com/sql/'},
     {label:'PostgreSQL — official documentation', url:'https://www.postgresql.org/docs/'},
-    {label:'SQLite — official documentation', url:'https://www.sqlite.org/docs.html'}
+    {label:'SQLite — official documentation', url:'https://www.sqlite.org/docs.html'},
+    {label:'Oracle — JDBC Basics tutorial', url:'https://docs.oracle.com/javase/tutorial/jdbc/basics/'},
+    {label:'Hibernate ORM — official documentation', url:'https://hibernate.org/orm/documentation/'},
+    {label:'Jakarta Persistence (JPA) specification', url:'https://jakarta.ee/specifications/persistence/'}
   ],
   concepts:[
     {name:'What a relational database is', explain:'A relational database stores data in tables, like spreadsheets — each row is one record, each column is one field. "Relational" means tables can be linked to each other, the way a library card catalog points you to where a book actually sits on a shelf.', code:'-- a "dogs" table: id, name, age (three columns)'},
     {name:'SQL, the language you talk to it in', explain:'SQL is how you ask a database to do something. It reads almost like plain English on purpose, and splits into a few families of commands you will meet below: creating structure, reading data, and changing data.', code:'SELECT * FROM dogs;'},
-    {name:'Creating and changing tables: CREATE, ALTER, DROP', explain:'CREATE TABLE builds a new table from scratch. ALTER TABLE changes an existing one — adding, renaming, or removing a column without starting over. DROP TABLE deletes the whole table, structure and all the data in it, permanently.', code:'CREATE TABLE dogs (id INT PRIMARY KEY, name VARCHAR(50));\nALTER TABLE dogs ADD COLUMN age INT;\nDROP TABLE old_dogs;'},
+    {divider:'SQL Commands, By Category'},
+    {name:'What the categories mean', explain:'Every SQL command belongs to one of four families, and knowing which one you are looking at tells you a lot about what it does before you even read the details. <b>DDL</b> (Data Definition Language) defines or changes the STRUCTURE — tables and columns. <b>DML</b> (Data Manipulation Language) works with the DATA inside those tables — reading, adding, changing, removing rows. <b>DCL</b> (Data Control Language) controls WHO is allowed to do what. <b>TCL</b> (Transaction Control Language) manages transactions — grouping several steps into one safe, all-or-nothing unit.', code:'// DDL: shapes the containers\n// DML: fills and changes what is inside them\n// DCL: controls who is allowed to touch them\n// TCL: makes multi-step changes safe'},
+    {name:'DDL — Data Definition Language: CREATE, ALTER, DROP, TRUNCATE', explain:'DDL commands define and change the STRUCTURE of a database — not the data inside it, but the containers that data lives in. CREATE TABLE builds a new one. ALTER TABLE changes an existing one — adding, renaming, or removing a column without starting over. TRUNCATE TABLE instantly empties every row but leaves the table itself standing, ready to be filled again. DROP TABLE deletes the whole table, structure and all the data in it, permanently.', code:'CREATE TABLE dogs (id INT PRIMARY KEY, name VARCHAR(50));  -- builds a new table\nALTER TABLE dogs ADD COLUMN age INT;                        -- changes its structure\nTRUNCATE TABLE dogs;                                        -- empties it, keeps the table\nDROP TABLE dogs;                                            -- deletes it completely'},
     {name:'Choosing data types', explain:'Columns have types just like variables do — INT for whole numbers, VARCHAR for text with a length limit, BOOLEAN for true/false, DATE for calendar dates, DECIMAL for precise money-style numbers. Picking the right one matters for both storage size and catching bad data early.', code:'age INT, name VARCHAR(50), is_active BOOLEAN, price DECIMAL(6,2)'},
     {name:'Primary keys and relationships', explain:'A primary key is a column guaranteed to be unique per row, like an ID number — no two dogs share the same id. A foreign key is a column in one table that points to a primary key in another, which is how tables get linked together.', code:'FOREIGN KEY (owner_id) REFERENCES owners(id)'},
     {name:'Constraints', explain:'Constraints are rules the database enforces automatically: NOT NULL requires a value, UNIQUE forbids duplicates, CHECK validates a condition, and DEFAULT fills in a value automatically when none is given. They stop bad data from ever getting saved in the first place.', code:'age INT CHECK (age >= 0) DEFAULT 0,\nemail VARCHAR(100) UNIQUE NOT NULL'},
-    {name:'Reading data: SELECT, WHERE, and DISTINCT', explain:"SELECT chooses which columns to read, WHERE filters which rows come back, and DISTINCT removes duplicate results. Comparison operators like =, !=, >, and < work inside WHERE, alongside special ones like LIKE (pattern matching), IN (matches any value in a list), BETWEEN (a range), and IS NULL (checking for missing values).", code:"SELECT DISTINCT name FROM dogs\nWHERE age BETWEEN 1 AND 5\n  AND name LIKE 'M%'\n  AND owner_id IS NOT NULL;"},
-    {name:'Changing data: INSERT, UPDATE, DELETE', explain:'INSERT adds new rows, UPDATE changes existing ones, and DELETE removes rows entirely. UPDATE and DELETE are both dangerous without a WHERE clause, since without one they apply to every single row in the table.', code:"INSERT INTO dogs (name, age) VALUES ('Milo', 3);\nUPDATE dogs SET age = 4 WHERE name = 'Milo';\nDELETE FROM dogs WHERE age < 1;"},
+    {name:'DML — Data Manipulation Language: SELECT, INSERT, UPDATE, DELETE', explain:'DML commands manipulate the DATA inside tables that already exist — reading it, adding to it, changing it, removing it. These four are the commands used constantly, day to day, once a table\'s structure is already in place. The next two concepts cover each in real depth.', code:"SELECT * FROM dogs;                                    -- reads rows\nINSERT INTO dogs (name, age) VALUES ('Milo', 3);       -- adds a row\nUPDATE dogs SET age = 4 WHERE name = 'Milo';           -- changes existing rows\nDELETE FROM dogs WHERE age < 1;                        -- removes rows"},
+    {name:'DML in depth — reading data: SELECT, WHERE, and DISTINCT', explain:"SELECT chooses which columns to read, WHERE filters which rows come back, and DISTINCT removes duplicate results. Comparison operators like =, !=, >, and < work inside WHERE, alongside special ones like LIKE (pattern matching), IN (matches any value in a list), BETWEEN (a range), and IS NULL (checking for missing values).", code:"SELECT DISTINCT name FROM dogs\nWHERE age BETWEEN 1 AND 5\n  AND name LIKE 'M%'\n  AND owner_id IS NOT NULL;"},
+    {name:'DML in depth — changing data: INSERT, UPDATE, DELETE', explain:'INSERT adds new rows, UPDATE changes existing ones, and DELETE removes rows entirely. UPDATE and DELETE are both dangerous without a WHERE clause, since without one they apply to every single row in the table.', code:"INSERT INTO dogs (name, age) VALUES ('Milo', 3);\nUPDATE dogs SET age = 4 WHERE name = 'Milo';\nDELETE FROM dogs WHERE age < 1;"},
     {name:'Sorting and limiting results', explain:'ORDER BY sorts results by one or more columns, ascending by default or descending with DESC. LIMIT caps how many rows come back at all, useful for things like "just show me the 10 newest."', code:'SELECT * FROM dogs ORDER BY age DESC LIMIT 10;'},
     {name:'Aggregate functions', explain:'Aggregate functions summarize many rows into one number: COUNT counts rows, SUM adds a column up, AVG averages it, and MIN/MAX find the smallest or largest value.', code:'SELECT COUNT(*), AVG(age), MAX(age) FROM dogs;'},
     {name:'Grouping with GROUP BY and HAVING', explain:'GROUP BY collapses rows sharing a value into one summarized row per group, usually paired with an aggregate function — like "how many dogs does each owner have?" HAVING then filters those grouped results, the way WHERE filters plain rows (WHERE cannot be used with aggregates directly).', code:'SELECT owner_id, COUNT(*) AS dog_count\nFROM dogs\nGROUP BY owner_id\nHAVING COUNT(*) > 1;'},
@@ -1377,9 +1453,24 @@ const CHAPTERS = [
     {name:'Combining results with UNION', explain:'UNION stacks the results of two separate SELECT queries into one combined result set (removing duplicates by default), as long as both queries return the same number and type of columns.', code:'SELECT name FROM dogs\nUNION\nSELECT name FROM cats;'},
     {name:'Views', explain:'A VIEW is a saved query that behaves like a virtual table — handy for a complicated query you reuse often, without retyping it or duplicating the underlying data.', code:'CREATE VIEW young_dogs AS\nSELECT * FROM dogs WHERE age < 2;'},
     {name:'Transactions and ACID', explain:'A transaction groups several steps into one all-or-nothing unit — like a bank transfer, where money leaving one account and arriving in another must both happen, or neither should. ACID (Atomicity, Consistency, Isolation, Durability) describes the guarantees a database makes about transactions.', code:'BEGIN;\nUPDATE accounts SET balance = balance - 100 WHERE id = 1;\nUPDATE accounts SET balance = balance + 100 WHERE id = 2;\nCOMMIT;'},
+    {name:'TCL — Transaction Control Language: COMMIT, ROLLBACK, SAVEPOINT', explain:'TCL commands are how you actually control a transaction once it has started. COMMIT makes every change in the current transaction permanent. ROLLBACK undoes them instead, as if the transaction never happened at all — essential if, say, the second half of a bank transfer fails and the first half needs to be undone too. SAVEPOINT marks a checkpoint partway through a transaction that you can roll back to, without undoing everything before it.', code:'BEGIN;\nUPDATE accounts SET balance = balance - 100 WHERE id = 1;\nSAVEPOINT before_credit;\nUPDATE accounts SET balance = balance + 100 WHERE id = 2;\n\nCOMMIT;                    -- keep every change\n-- or, if something went wrong:\nROLLBACK TO before_credit; -- undo back to that checkpoint only\nROLLBACK;                  -- undo the whole transaction'},
+    {name:'DCL — Data Control Language: GRANT, REVOKE', explain:'DCL commands control WHO is allowed to do what. GRANT hands out a specific permission to a specific database user or role; REVOKE takes it back. A real shelter database might let volunteers SELECT and INSERT, but only let the manager account DELETE — DCL is how that boundary gets enforced by the database itself, not just agreed on by convention.', code:'GRANT SELECT, INSERT ON dogs TO shelter_volunteer;  -- allow reading and adding\nREVOKE INSERT ON dogs FROM shelter_volunteer;        -- take that permission back'},
     {name:'Indexes', explain:'An index is a lookup shortcut on a column that makes searches much faster, at the cost of a bit of extra storage and slightly slower writes (since the index has to be updated too).', code:'CREATE INDEX idx_dogs_name ON dogs(name);'},
     {name:'Normalization, briefly', explain:'Normalization is the practice of organizing tables to avoid repeating the same data in multiple places — like storing an owner\'s address once in an owners table instead of copying it onto every single dog row that owner has.', code:'-- instead of repeating owner_name on every dog row,\n-- store it once in owners, and link with owner_id'},
-    {name:'SQL vs NoSQL', explain:'Not every database stores data in tables. NoSQL databases (like MongoDB) organize data differently — often as flexible documents instead of rigid rows and columns — which suits some problems better than the relational model does.', code:'// relational: rows and columns\n// NoSQL: flexible documents, key-value pairs, or graphs'}
+    {name:'SQL vs NoSQL', explain:'Not every database stores data in tables. NoSQL databases (like MongoDB) organize data differently — often as flexible documents instead of rigid rows and columns — which suits some problems better than the relational model does.', code:'// relational: rows and columns\n// NoSQL: flexible documents, key-value pairs, or graphs'},
+
+    {divider:'JDBC — Java Talking to a Database'},
+    {name:'What JDBC is', explain:'JDBC (Java Database Connectivity) is the standard Java API for talking to any SQL database. The same code pattern works whether you are connecting to SQLite, PostgreSQL, or MySQL — you just swap the connection URL and driver, and every SQL command above works exactly the same way once you are connected.', code:'String url = "jdbc:sqlite:shelter.db"; // jdbc:<database-type>:<connection-details>'},
+    {name:'Opening a connection', explain:'DriverManager.getConnection() opens an actual connection to the database, using a URL that tells JDBC which database engine to talk to and where.', code:'Connection conn = DriverManager.getConnection("jdbc:sqlite:shelter.db");'},
+    {name:'Statement vs PreparedStatement', explain:'A plain Statement runs a raw SQL string exactly as written — convenient, but dangerous if any part of that string comes from user input, a security hole called SQL injection. A PreparedStatement uses ? placeholders instead, with values supplied separately and safely, which is why real code almost always prefers it.', code:'PreparedStatement stmt = conn.prepareStatement(\n    "INSERT INTO dogs (name, age) VALUES (?, ?)"\n);\nstmt.setString(1, "Milo");\nstmt.setInt(2, 3);\nstmt.executeUpdate();'},
+    {name:'Reading results with ResultSet', explain:'executeQuery() returns a ResultSet — a cursor you step through one row at a time with .next(), reading each column by name, very similar in spirit to looping through a JSONArray in the JSON chapter.', code:'ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM dogs");\nwhile (rs.next()) {\n    System.out.println(rs.getString("name") + " is " + rs.getInt("age"));\n}'},
+    {name:'Closing what you open', explain:'Connections, Statements, and ResultSets all hold real system resources and need to be closed when you are done — try-with-resources (from the Sockets chapter) handles this automatically and is the safest default.', code:'try (Connection conn = DriverManager.getConnection(url);\n     PreparedStatement stmt = conn.prepareStatement("SELECT * FROM dogs")) {\n    ResultSet rs = stmt.executeQuery();\n    // use rs here\n}'},
+
+    {divider:'ORM — Object-Relational Mapping'},
+    {name:'What an ORM actually does', explain:'An ORM (Object-Relational Mapper) automatically translates between Java objects and SQL rows, so you write and think in classes instead of hand-writing SQL and manually copying ResultSet columns into fields yourself. Hibernate is the most widely used Java ORM, and JPA (Jakarta Persistence API) is the standard interface it — and others — implement.', code:'// without an ORM: manually copy every ResultSet column into a field, by hand, every single time'},
+    {name:'Marking a class as an entity', explain:'@Entity tells the ORM "this class corresponds to a table." @Id marks the primary key field, and @GeneratedValue tells it the database should generate that id automatically, the same auto-increment idea from earlier in this chapter.', code:'@Entity\npublic class Dog {\n    @Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)\n    private int id;\n\n    private String name;\n    private int age;\n}'},
+    {name:'Saving and querying without writing SQL', explain:'Once a class is mapped, an EntityManager (or a Spring Data JpaRepository, in larger projects) handles the actual INSERT and SELECT statements behind the scenes — you call methods on Java objects, and the ORM generates and runs the SQL for you.', code:'entityManager.persist(new Dog("Milo", 3));    // generates an INSERT, behind the scenes\nDog found = entityManager.find(Dog.class, 1); // generates a SELECT ... WHERE id = 1'},
+    {name:'ORM vs raw JDBC — the actual trade-off', explain:'An ORM saves a huge amount of repetitive boilerplate and reduces SQL injection risk, since you are no longer hand-building query strings. But it can hide what is actually happening underneath — a badly designed entity relationship can generate wildly inefficient SQL without you ever writing a line of it yourself. Most real projects use an ORM for typical everyday work, and still drop down to raw JDBC or hand-written queries for anything performance-critical or unusual. Understanding JDBC first, before reaching for an ORM, is what makes that second option possible at all.'}
   ],
   challenges:[
     {p:'Write a <span class="inline-code">CREATE TABLE</span> statement for a "dogs" table with an id (INT, PRIMARY KEY), a name (VARCHAR), and an age (INT).',
@@ -1425,15 +1516,41 @@ const CHAPTERS = [
   ]
 },
 
-{ id:'buildtools', tab:'Build Scripts', title:'Build Scripts (Maven & Gradle)', blurb:'Automating compile, test, and package instead of doing it by hand.',
+{ id:'buildtools', tab:'Build Scripts', title:'Build Scripts (Maven, Gradle & Make)', blurb:'Automating compile, test, and package instead of doing it by hand.',
   links:[
     {label:'Apache Maven — Guides', url:'https://maven.apache.org/guides/index.html'},
-    {label:'Gradle — User Manual', url:'https://docs.gradle.org/current/userguide/userguide.html'}
+    {label:'Gradle — User Manual', url:'https://docs.gradle.org/current/userguide/userguide.html'},
+    {label:'GNU Make — official manual', url:'https://www.gnu.org/software/make/manual/make.html'}
   ],
   concepts:[
     {name:'What a build tool actually does', explain:'A build tool automates compiling your code, running your tests, and packaging everything into something runnable — the same steps every time, instead of you remembering and typing them by hand.', code:'// like assembly instructions for furniture, followed exactly, every time'},
-    {name:"Maven's pom.xml", explain:"Maven describes a project in an XML file called pom.xml — what the project is called, what libraries (dependencies) it needs, and how to build it.", code:'<dependency>\n  <groupId>junit</groupId>\n  <artifactId>junit</artifactId>\n</dependency>'},
-    {name:"Gradle's build.gradle", explain:'Gradle does the same job as Maven, but with a shorter, more code-like syntax instead of XML. Many newer Java projects prefer it for exactly that reason.', code:"testImplementation 'junit:junit:4.13.2'"},
+    {name:'A complete pom.xml, explained line by line', explain:'This is not a fragment — it is a genuinely complete, working Maven project file for a small Java app with JUnit. Every real pom.xml you will ever open has these same core pieces: <ul style="margin:10px 0 0 18px; padding:0;">'
+      +'<li style="margin-bottom:6px;"><code>&lt;?xml version="1.0"?&gt;</code> — every XML file starts with this line. It just tells the computer "this is XML, version 1.0" — you never need to think about it again.</li>'
+      +'<li style="margin-bottom:6px;"><code>&lt;project&gt;...&lt;/project&gt;</code> — the single outer container. Everything about your project lives inside this one tag.</li>'
+      +'<li style="margin-bottom:6px;"><code>&lt;groupId&gt;com.example&lt;/groupId&gt;</code> — usually your company or personal domain, backwards. Groups related projects together.</li>'
+      +'<li style="margin-bottom:6px;"><code>&lt;artifactId&gt;dog-shelter&lt;/artifactId&gt;</code> — the actual name of THIS project. This becomes part of the built jar\'s filename.</li>'
+      +'<li style="margin-bottom:6px;"><code>&lt;version&gt;1.0.0&lt;/version&gt;</code> — this specific project\'s version number, following the MAJOR.MINOR.PATCH pattern covered below.</li>'
+      +'<li style="margin-bottom:6px;"><code>&lt;properties&gt;</code> — small settings, here just fixing which Java version to compile for so it does not depend on whatever happens to be installed on a given machine.</li>'
+      +'<li style="margin-bottom:6px;"><code>&lt;dependencies&gt;</code> — the list of outside libraries this project needs. Everything you learned in the Java Libraries chapter gets pulled in exactly like this.</li>'
+      +'<li style="margin-bottom:6px;"><code>&lt;dependency&gt;...&lt;/dependency&gt;</code> — one single library: JUnit here, identified by its own groupId, artifactId, and version, plus a scope (covered a few concepts down).</li>'
+      +'</ul>Save this exact file as <code>pom.xml</code> in your project\'s root folder, and <code>mvn test</code> already knows how to find and use it — no extra setup.',
+     code:'<?xml version="1.0" encoding="UTF-8"?>\n<project xmlns="http://maven.apache.org/POM/4.0.0">\n    <modelVersion>4.0.0</modelVersion>\n\n    <groupId>com.example</groupId>\n    <artifactId>dog-shelter</artifactId>\n    <version>1.0.0</version>\n\n    <properties>\n        <maven.compiler.source>17</maven.compiler.source>\n        <maven.compiler.target>17</maven.compiler.target>\n    </properties>\n\n    <dependencies>\n        <dependency>\n            <groupId>org.junit.jupiter</groupId>\n            <artifactId>junit-jupiter</artifactId>\n            <version>5.10.0</version>\n            <scope>test</scope>\n        </dependency>\n    </dependencies>\n</project>'},
+    {name:'The same project, as a complete build.gradle', explain:'Same project, same one dependency, Gradle\'s shorter syntax instead of XML: <ul style="margin:10px 0 0 18px; padding:0;">'
+      +'<li style="margin-bottom:6px;"><code>plugins { id \'java\' }</code> — tells Gradle this is a Java project, which unlocks built-in tasks like compileJava, test, and build.</li>'
+      +'<li style="margin-bottom:6px;"><code>group</code> and <code>version</code> — the direct equivalent of Maven\'s groupId and version tags.</li>'
+      +'<li style="margin-bottom:6px;"><code>repositories { mavenCentral() }</code> — WHERE to download dependencies from. mavenCentral() is the same public repository Maven uses by default too.</li>'
+      +'<li style="margin-bottom:6px;"><code>dependencies { testImplementation \'...\' }</code> — the one JUnit dependency again, written as a single compact string instead of nested XML tags.</li>'
+      +'</ul>Save as <code>build.gradle</code> in the project root, and <code>./gradlew test</code> already knows how to find and use it.',
+     code:'plugins {\n    id \'java\'\n}\n\ngroup = \'com.example\'\nversion = \'1.0.0\'\n\nrepositories {\n    mavenCentral()\n}\n\ndependencies {\n    testImplementation \'org.junit.jupiter:junit-jupiter:5.10.0\'\n}\n\ntest {\n    useJUnitPlatform()\n}'},
+    {name:'A complete Makefile, explained line by line', explain:'Maven and Gradle are Java-specific. Make is older, far more general-purpose, and still shows up constantly — especially wrapping Docker commands, or in projects that are not pure Java at all. A Makefile is just a list of named shortcuts for commands you would otherwise have to type out in full, every time. Walk through this one: <ul style="margin:10px 0 0 18px; padding:0;">'
+      +'<li style="margin-bottom:6px;"><code>build:</code> — this is a "target". Typing <code>make build</code> in a terminal runs everything indented underneath it.</li>'
+      +'<li style="margin-bottom:6px;">The indented line under it, <code>javac -d out src/main/java/chat/*.java</code>, is the ACTUAL command — the exact same one from the capstone chapter, just given a short name.</li>'
+      +'<li style="margin-bottom:6px;"><code>run: build</code> — the word after the colon is a dependency. This says "before running \'run\', always run \'build\' first" — so <code>make run</code> alone compiles AND runs, in the right order, automatically.</li>'
+      +'<li style="margin-bottom:6px;"><code>test:</code> — another independent target; <code>make test</code> runs only the test command, nothing else.</li>'
+      +'<li style="margin-bottom:6px;"><code>clean:</code> — deletes the out/ folder, a common shortcut before a fresh rebuild, mirroring "mvn clean" from the Maven lifecycle above.</li>'
+      +'<li style="margin-bottom:6px;"><code>.PHONY: build run test clean</code> — this line is easy to forget and worth remembering: it tells Make that these words are ACTIONS, not real files it should check for on disk. Without it, if a file literally named "clean" ever existed in the folder, Make would get confused and refuse to run.</li>'
+      +'</ul><b>The one gotcha that trips up almost everyone the first time:</b> the command line under each target MUST be indented with a real TAB character, not spaces. A text editor that quietly converts tabs to spaces will break every Makefile you write with a confusing "missing separator" error — this is the single most common first-time Makefile mistake there is.',
+     code:'build:\n\tjavac -d out src/main/java/chat/*.java\n\nrun: build\n\tjava -cp out chat.ChatServer\n\ntest:\n\tmvn test\n\nclean:\n\trm -rf out\n\n.PHONY: build run test clean'},
     {name:"Maven's build lifecycle", explain:'Maven runs through ordered phases: validate, compile, test, package, install, deploy. Running a later phase automatically runs every phase before it too — running "package" also compiles and tests first.', code:'validate -> compile -> test -> package -> install -> deploy'},
     {name:'Dependency scopes', explain:'Not every dependency is needed the same way: "compile" scope is needed everywhere, "test" scope is only needed for running tests, and "provided" scope is available while building but expected to already exist wherever the app actually runs.', code:'<scope>test</scope>'},
     {name:'Where dependencies come from', explain:'When you declare a dependency, the build tool first checks your local cache on your own machine. If it is not there yet, it downloads it from a remote repository, like Maven Central, and caches it locally for next time.', code:'// local cache first, then a remote repository like Maven Central'},
@@ -1482,7 +1599,15 @@ const CHAPTERS = [
     {p:'Write a build.gradle snippet applying the Java plugin using <span class="inline-code">plugins { id \'java\' }</span>.',
      checks:[{l:"Has plugins block with id 'java'", t:/plugins\s*\{[\s\S]*id\s*['"]java['"][\s\S]*\}/i}],
      s:"plugins {\n    id 'java'\n}",
-     m:['Forgetting the plugins block needs curly braces around it.','Applying the wrong plugin id for the kind of project actually being built.']}
+     m:['Forgetting the plugins block needs curly braces around it.','Applying the wrong plugin id for the kind of project actually being built.']},
+    {p:'Write a Makefile target called <span class="inline-code">build</span> that runs <span class="inline-code">javac Main.java</span>. Remember: the command line under a target needs a real TAB, not spaces.',
+     checks:[{l:'Has a build: target', t:/^build:/im},{l:'Runs javac Main.java', t:/javac Main\.java/i},{l:'Command line is tab-indented', t:/build:\n\t/}],
+     s:'build:\n\tjavac Main.java',
+     m:['Indenting the command with spaces instead of a real tab — Make specifically requires a tab character here, and will fail with "missing separator" otherwise.','Forgetting the colon after the target name — "build" alone is not a valid target.']},
+    {p:'Write a Makefile with a <span class="inline-code">run</span> target that depends on <span class="inline-code">build</span> (so <span class="inline-code">make run</span> always builds first), then runs <span class="inline-code">java Main</span>.',
+     checks:[{l:'Has run: build (a dependency)', t:/^run:\s*build/im},{l:'Runs java Main', t:/java Main/i}],
+     s:'build:\n\tjavac Main.java\n\nrun: build\n\tjava Main',
+     m:['Writing "run:" with no dependency listed — without "build" after the colon, make run will try to run Main before it has even been compiled.','Forgetting the run target still needs its own tab-indented command line below it.']}
   ]
 },
 
@@ -1494,7 +1619,7 @@ const CHAPTERS = [
   concepts:[
     {name:'Classes and objects', explain:'A class is a blueprint; an object is one actual thing built from that blueprint. Think of a cookie cutter (the class) and the cookies it stamps out (the objects) — same shape, but each cookie can be decorated differently.', code:'class Dog { String name; }\nDog milo = new Dog();'},
     {name:'Encapsulation', explain:'Encapsulation means keeping a class\'s data private and only allowing it to be changed through controlled public methods — like a vending machine, where you never touch the mechanism directly, only the buttons.', code:'private int balance;\npublic int getBalance() { return balance; }'},
-    {name:'Inheritance and polymorphism', explain:'Inheritance lets one class reuse and extend another — a Dog and a Cat can both be a kind of Animal. Polymorphism means you can treat them all as "Animal" in your code, and each one still does its own version of a shared action, like making its own sound.', code:'class Dog extends Animal {\n    void makeSound() { System.out.println("Woof"); }\n}'},
+    {name:'Inheritance and polymorphism', explain:'Inheritance lets one class reuse and extend another — a Dog and a Cat can both be a kind of Animal. Polymorphism means you can treat them all as "Animal" in your code, and each one still does its own version of a shared action, like making its own sound. The @Override annotation above a method is optional but strongly recommended — it tells the compiler "I mean to replace the parent\'s version," which catches typos (like a misspelled method name) as a compile error instead of a silent, confusing bug.', code:'class Dog extends Animal {\n    @Override\n    void makeSound() { System.out.println("Woof"); }\n}'},
     {name:'The four pillars, named', explain:'OOP is usually summarized as four ideas: encapsulation (hiding data behind controlled access), abstraction (hiding complex details behind a simple interface — you press "brew" on a coffee machine, not manage its heating element yourself), inheritance (reusing and extending another class), and polymorphism (treating different types through one shared interface).', code:'// encapsulation, abstraction, inheritance, polymorphism'},
     {name:'Constructors', explain:"A constructor is a special method that runs automatically when an object is created, normally used to set up its initial state. It shares the class's name and has no return type.", code:'public Dog(String name) {\n    this.name = name;\n}'},
     {name:'Overloading vs overriding', explain:'Overloading means having several methods with the same name but different parameters, in the same class. Overriding means a subclass replacing a method it inherited from its parent, using the exact same signature.', code:'void bark() {}\nvoid bark(int times) {} // overloaded, not overridden'},
@@ -1668,81 +1793,73 @@ const CHAPTERS = [
   ]
 },
 
-{ id:'capstone', tab:'★ Capstone', title:'Build a Real Thing: A Tiny Chat App', blurb:'Not another isolated task — one small project, start to finish, on your own machine.',
+{ id:'capstones', tab:'★ Capstones', title:'Real Projects, Start to Finish', blurb:'Four small, real, connected projects in one place — pick one and build it end to end on your own machine.',
   links:[
     {label:'Eclipse Temurin (free JDK downloads)', url:'https://adoptium.net'},
+    {label:'IntelliJ IDEA Community Edition (free)', url:'https://www.jetbrains.com/idea/download/'},
     {label:'Oracle — All About Sockets (official tutorial)', url:'https://docs.oracle.com/javase/tutorial/networking/sockets/'},
-    {label:'IntelliJ IDEA Community Edition (free)', url:'https://www.jetbrains.com/idea/download/'}
-  ],
-  isProject:true,
-  steps:[
-    {title:'What we\'re actually building, and why', explain:'Every other chapter here is deliberately one isolated task at a time — that builds recognition, but it never once makes you wire pieces together, deal with folders, or read a real compiler error. This chapter is the opposite: one small, real, connected project. You\'ll build a two-person chat app — a ChatServer and a ChatClient talking to each other over a real Socket, sending hand-written JSON messages, with multiple clients handled on separate Threads, and one real JUnit test at the end. Nothing here is graded automatically — you\'re building this in your own editor, on your own machine, and checking each step off yourself as you go.'},
-    {title:'Install the tools', explain:'You need a Java Development Kit (JDK), version 17 or newer, and a place to write code — a plain text editor works, but a free IDE like IntelliJ IDEA Community Edition or VS Code with the Java extensions will save you a lot of pain, especially later with JUnit. Run these two commands in a terminal to check what you already have.', code:'java -version\njavac -version', note:'If either command says "not found," install a free JDK from https://adoptium.net, then try again.'},
-    {title:'Create the project folder structure', explain:'Folder structure is not decoration — javac and JUnit both expect Java files to live inside folders matching their package name. Getting this right the first time avoids a whole category of confusing "cannot find symbol" errors later.', code:'chat-app/\n  src/\n    main/\n      java/\n        chat/\n          Message.java\n          ChatServer.java\n          ChatClient.java\n    test/\n      java/\n        chat/\n          MessageTest.java', note:'Create these folders and empty files by hand, either with mkdir in a terminal or "New File" in your editor.'},
-    {title:'Write Message.java', explain:'A chat message just needs a sender and some text. Rather than pulling in the org.json library from the JSON chapter right away, write the JSON conversion by hand for now — it keeps this first version compilable with nothing but javac, no extra downloads required.', code:'package chat;\n\npublic class Message {\n    String sender;\n    String text;\n\n    public Message(String sender, String text) {\n        this.sender = sender;\n        this.text = text;\n    }\n\n    public String toJson() {\n        return "{\\"sender\\":\\"" + sender + "\\",\\"text\\":\\"" + text + "\\"}";\n    }\n\n    public static Message fromJson(String json) {\n        String sender = json.split("\\"sender\\":\\"")[1].split("\\"")[0];\n        String text = json.split("\\"text\\":\\"")[1].split("\\"")[0];\n        return new Message(sender, text);\n    }\n}', note:'This parsing is deliberately naive — it breaks the moment a message contains a quote character. That is on purpose: it is a good first look at exactly why real projects reach for a proper JSON library once things get more complex.'},
-    {title:'Write ChatServer.java — Sockets and Threads, together', explain:'The server accepts connections in a loop, and hands each one off to its own thread so multiple people can chat at once without blocking each other — exactly the Sockets and Threads chapters, but now doing a real job together.', code:'package chat;\n\nimport java.io.*;\nimport java.net.*;\nimport java.util.*;\n\npublic class ChatServer {\n    static List<PrintWriter> clients = new ArrayList<>();\n\n    public static void main(String[] args) throws IOException {\n        ServerSocket server = new ServerSocket(5000);\n        System.out.println("Chat server running on port 5000...");\n\n        while (true) {\n            Socket clientSocket = server.accept();\n            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);\n            synchronized (clients) {\n                clients.add(out);\n            }\n            new Thread(() -> handleClient(clientSocket, out)).start();\n        }\n    }\n\n    static void handleClient(Socket socket, PrintWriter out) {\n        try {\n            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));\n            String line;\n            while ((line = in.readLine()) != null) {\n                Message msg = Message.fromJson(line);\n                broadcast(msg.toJson());\n            }\n        } catch (IOException e) {\n            System.out.println("A client disconnected.");\n        }\n    }\n\n    static void broadcast(String json) {\n        synchronized (clients) {\n            for (PrintWriter client : clients) {\n                client.println(json);\n            }\n        }\n    }\n}', note:'Notice synchronized around the shared clients list — that is the exact race-condition problem from the synchronized chapter, showing up in a real place: several client threads adding to and reading that same list at once.'},
-    {title:'Write ChatClient.java — reading and writing at the same time', explain:'The client needs to do two things at once: constantly listen for messages arriving from other people, while also waiting for you to type and send your own. That is one thread for listening, and the main thread for typing — a second real use of what the Threads chapter covered.', code:'package chat;\n\nimport java.io.*;\nimport java.net.*;\nimport java.util.Scanner;\n\npublic class ChatClient {\n    public static void main(String[] args) throws IOException {\n        Socket socket = new Socket("localhost", 5000);\n        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);\n        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));\n\n        Scanner scanner = new Scanner(System.in);\n        System.out.print("Enter your name: ");\n        String name = scanner.nextLine();\n\n        new Thread(() -> {\n            try {\n                String incoming;\n                while ((incoming = in.readLine()) != null) {\n                    Message msg = Message.fromJson(incoming);\n                    System.out.println(msg.sender + ": " + msg.text);\n                }\n            } catch (IOException e) {\n                System.out.println("Disconnected from server.");\n            }\n        }).start();\n\n        while (true) {\n            String text = scanner.nextLine();\n            Message msg = new Message(name, text);\n            out.println(msg.toJson());\n        }\n    }\n}'},
-    {title:'Compile and run it for real', explain:'This is the step none of the other chapters give you: actually compiling and running your own code, with a real compiler, seeing whatever errors it throws at you, and fixing them yourself.', code:'javac -d out src/main/java/chat/*.java\njava -cp out chat.ChatServer', note:'Open a second (and third) terminal window and run "java -cp out chat.ChatClient" in each. Type a message in one client and watch it appear in the other — that is Sockets, Threads, and hand-rolled JSON all genuinely working together, outside of any browser challenge.'},
-    {title:'Write a real JUnit test for Message', explain:'Test the trickiest, most bug-prone part of what you just wrote — the JSON parsing — the same way the JUnit chapter covered, but now against your own real class instead of a browser text box.', code:'package chat;\n\nimport org.junit.jupiter.api.Test;\nimport static org.junit.jupiter.api.Assertions.assertEquals;\n\nclass MessageTest {\n\n    @Test\n    void testToJson() {\n        Message msg = new Message("Milo", "hello");\n        assertEquals("{\\"sender\\":\\"Milo\\",\\"text\\":\\"hello\\"}", msg.toJson());\n    }\n\n    @Test\n    void testFromJson() {\n        Message msg = Message.fromJson("{\\"sender\\":\\"Milo\\",\\"text\\":\\"hello\\"}");\n        assertEquals("Milo", msg.sender);\n        assertEquals("hello", msg.text);\n    }\n}', note:'Running this needs JUnit wired into your project. The easiest route as a beginner: open the folder in IntelliJ IDEA Community (free) — the moment it sees a @Test, it will offer to download and configure JUnit for you automatically.'},
-    {title:'Where to take it from here', explain:'This one small project already touched four chapters at once. Every other chapter in this notebook is one more direction you could take it in next: <ul style="margin:8px 0 0 18px; padding:0;"><li>swap the hand-rolled JSON for the real org.json library, and set up a pom.xml from the Build Scripts chapter to manage it</li><li>write a Dockerfile from the Docker chapter and run ChatServer inside a container</li><li>add a Databases chapter table that logs every message to real SQL instead of just printing it</li><li>write a small pipeline from the Pipelines chapter that runs MessageTest automatically on every push</li><li>split ChatServer\'s responsibilities into smaller classes using the OOP chapter\'s ideas</li><li>next time, try writing MessageTest FIRST, before Message.java even exists — that is the TDD chapter, for real</li></ul>'}
-  ]
-},
-
-{ id:'capstone2', tab:'★ Capstone II', title:'Build a Real Thing: A Dog Shelter REST API', blurb:'A small HTTP API you can actually call with curl — ties together APIs, protocols, JSON, OOP, and a real database.',
-  links:[
     {label:'Java SE 17 — com.sun.net.httpserver (built-in HTTP server)', url:'https://docs.oracle.com/en/java/javase/17/docs/api/jdk.httpserver/com/sun/net/httpserver/HttpServer.html'},
     {label:'SQLite JDBC driver (GitHub)', url:'https://github.com/xerial/sqlite-jdbc'},
-    {label:'curl — official documentation', url:'https://curl.se/docs/'}
-  ],
-  isProject:true,
-  steps:[
-    {title:'What we\'re building, and why', explain:'A tiny REST API for a dog shelter — GET /dogs lists every dog, POST /dogs adds one — using nothing but the JDK\'s own built-in HttpServer, so there is no framework to install before you can start. You will build it against a simple in-memory list first, then swap that for a real SQLite database without changing the API layer at all — which is the whole point of the OOP encapsulation from that chapter finally paying off in a real project.'},
-    {title:'Folder structure', explain:'Same idea as the chat app: the package name has to match the folder path.', code:'shelter-api/\n  src/\n    main/\n      java/\n        shelter/\n          Dog.java\n          DogStore.java\n          ShelterServer.java'},
-    {title:'Write Dog.java', explain:'A plain, small class — this is the OOP chapter\'s "classes and objects" concept, doing real work: private fields, a constructor, and a toJson() method so this object can turn itself into the text an API response needs.', code:'package shelter;\n\npublic class Dog {\n    private static int nextId = 1;\n    int id;\n    String name;\n    int age;\n\n    public Dog(String name, int age) {\n        this.id = nextId++;\n        this.name = name;\n        this.age = age;\n    }\n\n    public String toJson() {\n        return "{\\"id\\":" + id + ",\\"name\\":\\"" + name + "\\",\\"age\\":" + age + "}";\n    }\n}'},
-    {title:'Write DogStore.java — an in-memory "database" for now', explain:'DogStore hides exactly how dogs are stored behind a small, clean set of methods. Right now that is just an ArrayList — but because nothing outside this class touches that list directly, you can swap the internals for a real database later without breaking anything that calls it. That is encapsulation, doing actual work.', code:'package shelter;\n\nimport java.util.ArrayList;\nimport java.util.List;\n\npublic class DogStore {\n    private List<Dog> dogs = new ArrayList<>();\n\n    public synchronized void add(Dog dog) {\n        dogs.add(dog);\n    }\n\n    public synchronized List<Dog> getAll() {\n        return new ArrayList<>(dogs);\n    }\n}', note:'synchronized here is not decoration — a real server can receive two requests from two different clients at the exact same moment, on two different threads. Same reason as the synchronized chapter, showing up again.'},
-    {title:'Write ShelterServer.java — HTTP methods and status codes, for real', explain:'com.sun.net.httpserver.HttpServer ships with the JDK. It reads the incoming request\'s method (GET or POST) and writes back a real status code — 200 for a successful read, 201 for something newly created, 405 for a method the endpoint does not support — exactly the status code families from the Protocols chapter, now something you are choosing yourself instead of just reading about.', code:'package shelter;\n\nimport com.sun.net.httpserver.HttpServer;\nimport com.sun.net.httpserver.HttpExchange;\nimport java.io.*;\nimport java.net.InetSocketAddress;\nimport java.nio.charset.StandardCharsets;\n\npublic class ShelterServer {\n    static DogStore store = new DogStore();\n\n    public static void main(String[] args) throws IOException {\n        HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);\n        server.createContext("/dogs", ShelterServer::handleDogs);\n        server.start();\n        System.out.println("Shelter API running on http://localhost:8000/dogs");\n    }\n\n    static void handleDogs(HttpExchange exchange) throws IOException {\n        if (exchange.getRequestMethod().equals("GET")) {\n            StringBuilder json = new StringBuilder("[");\n            var all = store.getAll();\n            for (int i = 0; i < all.size(); i++) {\n                json.append(all.get(i).toJson());\n                if (i < all.size() - 1) json.append(",");\n            }\n            json.append("]");\n            sendResponse(exchange, 200, json.toString());\n\n        } else if (exchange.getRequestMethod().equals("POST")) {\n            String body = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);\n            String name = body.split("\\"name\\":\\"")[1].split("\\"")[0];\n            int age = Integer.parseInt(body.split("\\"age\\":")[1].replaceAll("[^0-9]", ""));\n            store.add(new Dog(name, age));\n            sendResponse(exchange, 201, "{\\"status\\":\\"created\\"}");\n\n        } else {\n            sendResponse(exchange, 405, "{\\"error\\":\\"method not allowed\\"}");\n        }\n    }\n\n    static void sendResponse(HttpExchange exchange, int statusCode, String body) throws IOException {\n        exchange.getResponseHeaders().set("Content-Type", "application/json");\n        byte[] bytes = body.getBytes(StandardCharsets.UTF_8);\n        exchange.sendResponseHeaders(statusCode, bytes.length);\n        OutputStream os = exchange.getResponseBody();\n        os.write(bytes);\n        os.close();\n    }\n}'},
-    {title:'Compile, run it, and actually call it', explain:'This is the same javac and java commands as the chat app — but this time, the other side of the conversation is a real HTTP client, not another one of your own Java programs.', code:'javac -d out src/main/java/shelter/*.java\njava -cp out shelter.ShelterServer', note:'In another terminal: curl http://localhost:8000/dogs to list dogs (empty at first), then curl -X POST http://localhost:8000/dogs -d "{\\"name\\":\\"Milo\\",\\"age\\":3}" to add one, then GET again to see it show up.'},
-    {title:'Swap in a real database — SQLite via JDBC', explain:'SQLite is a real SQL database that lives in a single file, with no server to install — perfect for practicing the Databases chapter\'s actual commands without extra setup. Rewrite DogStore\'s internals to use JDBC, while keeping add() and getAll() with the exact same signatures — nothing in ShelterServer needs to change at all.', code:'// DogStore.java, rewritten to use SQLite instead of an ArrayList\npackage shelter;\n\nimport java.sql.*;\nimport java.util.*;\n\npublic class DogStore {\n    private Connection conn;\n\n    public DogStore() throws SQLException {\n        conn = DriverManager.getConnection("jdbc:sqlite:shelter.db");\n        conn.createStatement().execute(\n            "CREATE TABLE IF NOT EXISTS dogs (id INTEGER PRIMARY KEY, name TEXT, age INTEGER)"\n        );\n    }\n\n    public void add(Dog dog) throws SQLException {\n        PreparedStatement stmt = conn.prepareStatement(\n            "INSERT INTO dogs (name, age) VALUES (?, ?)"\n        );\n        stmt.setString(1, dog.name);\n        stmt.setInt(2, dog.age);\n        stmt.executeUpdate();\n    }\n\n    public List<Dog> getAll() throws SQLException {\n        List<Dog> result = new ArrayList<>();\n        ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM dogs");\n        while (rs.next()) {\n            result.add(new Dog(rs.getString("name"), rs.getInt("age")));\n        }\n        return result;\n    }\n}', note:'You will need the sqlite-jdbc .jar on your classpath — search "sqlite-jdbc maven central" for the download, or add it as a dependency once you have set up a real build tool in the next capstone. PreparedStatement with ? placeholders (instead of gluing the name straight into the SQL text) is also how real code avoids a security hole called SQL injection.'},
-    {title:'Bonus: a second way to persist data — Serializable backup', explain:'Add a /backup endpoint that freezes the current DogStore contents to a file using Java Serialization, the same ObjectOutputStream approach from the Serialization chapter — a genuinely different persistence strategy sitting right next to the database, so the contrast is concrete instead of abstract.', code:'// a small addition showing the idea — wire it into your own endpoint\nimport java.io.*;\n\nstatic void backupToFile(List<Dog> dogs) throws IOException {\n    ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("backup.dat"));\n    out.writeObject(new ArrayList<>(dogs));\n    out.close();\n}', note:'For this to compile, Dog needs "implements Serializable" added to its class declaration — exactly the requirement from that chapter.'},
-    {title:'Where to take it further', explain:'This project already covers APIs, Protocols, JSON, OOP, Databases, and Serialization in one place. Natural next steps: <ul style="margin:8px 0 0 18px; padding:0;"><li>add a DELETE /dogs/{id} endpoint and return 404 when the id does not exist</li><li>add pagination with a ?page= query parameter, from the APIs chapter</li><li>require an API key header before allowing POST requests</li><li>move on to the next Capstone chapter and package this whole thing with Maven, Docker, and a pipeline</li></ul>'}
-  ]
-},
-
-{ id:'capstone3', tab:'★ Capstone III', title:'Ship It: Package, Containerize, and Automate', blurb:'Take a project you already built and turn it from "runs on my machine" into something that builds, tests, and ships itself.',
-  links:[
+    {label:'curl — official documentation', url:'https://curl.se/docs/'},
     {label:'Docker — Get Started guide', url:'https://docs.docker.com/get-started/'},
-    {label:'GitHub Actions — official documentation', url:'https://docs.github.com/en/actions'}
-  ],
-  isProject:true,
-  steps:[
-    {title:'Why this project exists', explain:'Everything so far ran with plain javac, on your machine, by hand. Real projects use a build tool to manage dependencies, get packaged into a container so they run identically everywhere, and get tested automatically before a human ever clicks deploy. This project applies exactly that — Build Scripts, Docker, and Pipelines — to the Chat App or Shelter API you already built. Pick whichever one you still have on disk.'},
-    {title:'Convert it to a Maven project', explain:'Maven expects a specific folder shape and a pom.xml describing the project. If you followed the earlier capstones, your src/main/java layout is already most of the way there.', code:'<project xmlns="http://maven.apache.org/POM/4.0.0">\n  <modelVersion>4.0.0</modelVersion>\n  <groupId>com.example</groupId>\n  <artifactId>shelter-api</artifactId>\n  <version>1.0.0</version>\n\n  <properties>\n    <maven.compiler.source>17</maven.compiler.source>\n    <maven.compiler.target>17</maven.compiler.target>\n  </properties>\n\n  <dependencies>\n    <dependency>\n      <groupId>org.junit.jupiter</groupId>\n      <artifactId>junit-jupiter</artifactId>\n      <version>5.10.0</version>\n      <scope>test</scope>\n    </dependency>\n  </dependencies>\n</project>', note:'Save this as pom.xml in the project root — the same folder that contains your src/ folder.'},
-    {title:'Build and test it with real Maven commands', explain:'These are the exact commands from the Build Scripts chapter, run against your own project this time instead of typed as an isolated answer.', code:'mvn compile\nmvn test\nmvn package', note:'mvn package puts a runnable jar under target/ — that jar is what the Dockerfile in the next step will actually copy in.'},
-    {title:'Write a Dockerfile for it', explain:'This is every instruction from the Docker chapter, assembled into one real file that packages your own project instead of a hypothetical one.', code:'FROM openjdk:17\nWORKDIR /app\nCOPY target/shelter-api-1.0.0.jar app.jar\nEXPOSE 8000\nENTRYPOINT ["java", "-jar", "app.jar"]', note:'Save this as a file literally named "Dockerfile" (no extension) in the project root.'},
-    {title:'Build and run the image', explain:'Same two commands as the Docker chapter — the difference is watching your own API respond from inside a container instead of taking it on faith.', code:'docker build -t shelter-api .\ndocker run -p 8000:8000 shelter-api', note:'Run curl http://localhost:8000/dogs again — it should behave identically to when you ran it with plain java, just now fully sealed inside a container.'},
-    {title:'Write a CI pipeline', explain:'A GitHub Actions workflow file, using the YAML structure from the Pipelines chapter, that runs your tests automatically on every push — this is the actual assembly line, not a description of one.', code:'# .github/workflows/ci.yml\non:\n  push:\n    branches: [main]\n\njobs:\n  build-and-test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-java@v4\n        with:\n          java-version: "17"\n          distribution: "temurin"\n      - run: mvn test\n      - run: docker build -t shelter-api .', note:'This file has to live at exactly .github/workflows/ci.yml from your repository root — GitHub looks for workflows in that specific path.'},
-    {title:'Push it and watch it actually run', explain:'This step needs a real GitHub account and a new empty repository — create one, then push your project to it. Once pushed, click the "Actions" tab on the repository page and watch your pipeline run for real, with real logs, on GitHub\'s own servers, not a simulation.', code:'git init\ngit add .\ngit commit -m "first commit"\ngit remote add origin https://github.com/YOUR_USERNAME/shelter-api.git\ngit push -u origin main'},
-    {title:'Where to take it further', explain:'You now have the same pipeline shape real companies run. Natural next steps: <ul style="margin:8px 0 0 18px; padding:0;"><li>add a deploy stage that only runs if the test and build stages both succeeded</li><li>push the built image to Docker Hub as a real registry, using a secret for the login instead of hardcoding it</li><li>add a status badge to a README.md so anyone visiting the repo can see the pipeline is passing</li><li>split the pipeline into separate dev/staging/production environments</li></ul>'}
-  ]
-},
-
-{ id:'capstone4', tab:'★ Capstone IV', title:'Test It Properly: TDD and Acceptance, for Real', blurb:'Build one small feature the disciplined way — test first, every time — then prove it works from a user\'s point of view too.',
-  links:[
+    {label:'GitHub Actions — official documentation', url:'https://docs.github.com/en/actions'},
     {label:'JUnit 5 — User Guide', url:'https://junit.org/junit5/docs/current/user-guide/'},
     {label:'Cucumber — official documentation', url:'https://cucumber.io/docs/guides/overview/'}
   ],
-  isProject:true,
-  steps:[
-    {title:'What we\'re building, and why', explain:'A PasswordValidator class, built strictly test-first — red, then green, then refactor, repeated — followed by one real Gherkin acceptance scenario describing the same feature in plain language. This is the TDD chapter and the Acceptance Testing chapter, done for real and in the correct order, instead of simulated one challenge at a time.'},
-    {title:'Folder structure', explain:'A small project, but with the same real structure as the others — tests live in their own parallel folder.', code:'password-check/\n  src/\n    main/\n      java/\n        pwcheck/\n          PasswordValidator.java\n    test/\n      java/\n        pwcheck/\n          PasswordValidatorTest.java'},
-    {title:'Red: write the first failing test', explain:'Write this BEFORE PasswordValidator.java exists at all. Run it (mvn test, or your IDE\'s test runner) and confirm it genuinely fails to even compile — that failure is not a mistake, it is the entire starting point of TDD.', code:'package pwcheck;\n\nimport org.junit.jupiter.api.Test;\nimport static org.junit.jupiter.api.Assertions.assertFalse;\n\nclass PasswordValidatorTest {\n\n    @Test\n    void testRejectsShortPassword() {\n        PasswordValidator validator = new PasswordValidator();\n        assertFalse(validator.isValid("abc"));\n    }\n}'},
-    {title:'Green: write just enough code to pass it', explain:'Nothing fancy — a length check, and nothing else yet. Resist the urge to add anything the current test does not actually require.', code:'package pwcheck;\n\npublic class PasswordValidator {\n    public boolean isValid(String password) {\n        return password.length() >= 8;\n    }\n}'},
-    {title:'Red again: a second failing test', explain:'One new behavior, one new test — requiring at least one digit.', code:'@Test\nvoid testRejectsPasswordWithNoDigit() {\n    PasswordValidator validator = new PasswordValidator();\n    assertFalse(validator.isValid("abcdefgh"));\n}'},
-    {title:'Green again: extend the implementation', explain:'Add just enough to make the new test pass, then re-run BOTH tests to confirm neither one broke the other.', code:'public boolean isValid(String password) {\n    if (password.length() < 8) return false;\n    boolean hasDigit = password.chars().anyMatch(Character::isDigit);\n    return hasDigit;\n}'},
-    {title:'Refactor', explain:'Clean the method up without changing what it does — pull the digit check into its own clearly named method. Re-run the tests immediately after; they should pass exactly as before, completely unchanged.', code:'public boolean isValid(String password) {\n    return hasMinLength(password) && hasDigit(password);\n}\n\nprivate boolean hasMinLength(String password) {\n    return password.length() >= 8;\n}\n\nprivate boolean hasDigit(String password) {\n    return password.chars().anyMatch(Character::isDigit);\n}'},
-    {title:'Keep the cycle going on your own', explain:'Do at least two or three more full red-green-refactor rounds yourself, without a code sample to lean on this time: require at least one uppercase letter, require at least one special character, and reject an empty string outright. Each one is its own small red-green-refactor loop, same shape as above.'},
-    {title:'Zoom out: write an acceptance scenario', explain:'Now describe the same feature from a user\'s point of view, in plain Gherkin, the way the Acceptance Testing chapter covered — this is a different, higher level than the unit tests above, and deliberately so.', code:'Feature: setting a password\n\n  Scenario: user sets a valid password\n    Given the user is on the account setup page\n    When they enter a password with 8+ characters and a digit\n    Then their account is created\n\n  Scenario: user tries a weak password\n    Given the user is on the account setup page\n    When they enter a password that is too short\n    Then they see an error asking for a stronger password', note:'Save this as password_setup.feature — the .feature extension is what tools like Cucumber look for.'},
-    {title:'Where to take it further', explain:'You have now practiced the full stack of testing disciplines this notebook covers, in the right order. Natural next steps: <ul style="margin:8px 0 0 18px; padding:0;"><li>wire the Gherkin scenarios up to real Cucumber @Given/@When/@Then step definitions that actually call PasswordValidator</li><li>add PasswordValidatorTest to the CI pipeline from the Ship It capstone, so it runs on every push</li><li>try applying the same red-green-refactor discipline to a small piece of the Shelter API, like validating a dog\'s age is not negative</li></ul>'}
+  isCapstones:true,
+  projects:[
+    { id:'chat', label:'I. Chat App', title:'Build a Real Thing: A Tiny Chat App', blurb:'Not another isolated task — one small project, start to finish, on your own machine.',
+      steps:[
+        {title:'What we\'re actually building, and why', explain:'Every other chapter here is deliberately one isolated task at a time — that builds recognition, but it never once makes you wire pieces together, deal with folders, or read a real compiler error. This project is the opposite: one small, real, connected build. You\'ll build a two-person chat app — a ChatServer and a ChatClient talking to each other over a real Socket, sending hand-written JSON messages, with multiple clients handled on separate Threads, and one real JUnit test at the end. Build this in your own editor, on your own machine.'},
+        {title:'Install the tools', explain:'You need a Java Development Kit (JDK), version 17 or newer, and a place to write code — a plain text editor works, but a free IDE like IntelliJ IDEA Community Edition or VS Code with the Java extensions will save you a lot of pain, especially later with JUnit. Run these two commands in a terminal to check what you already have.', code:'java -version\njavac -version', note:'If either command says "not found," install a free JDK from https://adoptium.net, then try again.'},
+        {title:'Create the project folder structure', explain:'Folder structure is not decoration — javac and JUnit both expect Java files to live inside folders matching their package name. Getting this right the first time avoids a whole category of confusing "cannot find symbol" errors later.', code:'chat-app/\n  src/\n    main/\n      java/\n        chat/\n          Message.java\n          ChatServer.java\n          ChatClient.java\n    test/\n      java/\n        chat/\n          MessageTest.java', note:'Create these folders and empty files by hand, either with mkdir in a terminal or "New File" in your editor.'},
+        {title:'Write Message.java', explain:'A chat message just needs a sender and some text. Rather than pulling in the org.json library from the JSON chapter right away, write the JSON conversion by hand for now — it keeps this first version compilable with nothing but javac, no extra downloads required.', code:'package chat;\n\npublic class Message {\n    String sender;\n    String text;\n\n    public Message(String sender, String text) {\n        this.sender = sender;\n        this.text = text;\n    }\n\n    public String toJson() {\n        return "{\\"sender\\":\\"" + sender + "\\",\\"text\\":\\"" + text + "\\"}";\n    }\n\n    public static Message fromJson(String json) {\n        String sender = json.split("\\"sender\\":\\"")[1].split("\\"")[0];\n        String text = json.split("\\"text\\":\\"")[1].split("\\"")[0];\n        return new Message(sender, text);\n    }\n}', note:'This parsing is deliberately naive — it breaks the moment a message contains a quote character. That is on purpose: it is a good first look at exactly why real projects reach for a proper JSON library once things get more complex.'},
+        {title:'Write ChatServer.java — Sockets and Threads, together', explain:'The server accepts connections in a loop, and hands each one off to its own thread so multiple people can chat at once without blocking each other — exactly the Sockets and Threads chapters, but now doing a real job together.', code:'package chat;\n\nimport java.io.*;\nimport java.net.*;\nimport java.util.*;\n\npublic class ChatServer {\n    static List<PrintWriter> clients = new ArrayList<>();\n\n    public static void main(String[] args) throws IOException {\n        ServerSocket server = new ServerSocket(5000);\n        System.out.println("Chat server running on port 5000...");\n\n        while (true) {\n            Socket clientSocket = server.accept();\n            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);\n            synchronized (clients) {\n                clients.add(out);\n            }\n            new Thread(() -> handleClient(clientSocket, out)).start();\n        }\n    }\n\n    static void handleClient(Socket socket, PrintWriter out) {\n        try {\n            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));\n            String line;\n            while ((line = in.readLine()) != null) {\n                Message msg = Message.fromJson(line);\n                broadcast(msg.toJson());\n            }\n        } catch (IOException e) {\n            System.out.println("A client disconnected.");\n        }\n    }\n\n    static void broadcast(String json) {\n        synchronized (clients) {\n            for (PrintWriter client : clients) {\n                client.println(json);\n            }\n        }\n    }\n}', note:'Notice synchronized around the shared clients list — that is the exact race-condition problem from the synchronized chapter, showing up in a real place: several client threads adding to and reading that same list at once.'},
+        {title:'Write ChatClient.java — reading and writing at the same time', explain:'The client needs to do two things at once: constantly listen for messages arriving from other people, while also waiting for you to type and send your own. That is one thread for listening, and the main thread for typing — a second real use of what the Threads chapter covered.', code:'package chat;\n\nimport java.io.*;\nimport java.net.*;\nimport java.util.Scanner;\n\npublic class ChatClient {\n    public static void main(String[] args) throws IOException {\n        Socket socket = new Socket("localhost", 5000);\n        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);\n        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));\n\n        Scanner scanner = new Scanner(System.in);\n        System.out.print("Enter your name: ");\n        String name = scanner.nextLine();\n\n        new Thread(() -> {\n            try {\n                String incoming;\n                while ((incoming = in.readLine()) != null) {\n                    Message msg = Message.fromJson(incoming);\n                    System.out.println(msg.sender + ": " + msg.text);\n                }\n            } catch (IOException e) {\n                System.out.println("Disconnected from server.");\n            }\n        }).start();\n\n        while (true) {\n            String text = scanner.nextLine();\n            Message msg = new Message(name, text);\n            out.println(msg.toJson());\n        }\n    }\n}'},
+        {title:'Compile and run it for real', explain:'This is the step none of the other chapters give you: actually compiling and running your own code, with a real compiler, seeing whatever errors it throws at you, and fixing them yourself.', code:'javac -d out src/main/java/chat/*.java\njava -cp out chat.ChatServer', note:'Open a second (and third) terminal window and run "java -cp out chat.ChatClient" in each. Type a message in one client and watch it appear in the other — that is Sockets, Threads, and hand-rolled JSON all genuinely working together, outside of any browser challenge.'},
+        {title:'Write a real JUnit test for Message', explain:'Test the trickiest, most bug-prone part of what you just wrote — the JSON parsing — the same way the JUnit chapter covered, but now against your own real class instead of a browser text box.', code:'package chat;\n\nimport org.junit.jupiter.api.Test;\nimport static org.junit.jupiter.api.Assertions.assertEquals;\n\nclass MessageTest {\n\n    @Test\n    void testToJson() {\n        Message msg = new Message("Milo", "hello");\n        assertEquals("{\\"sender\\":\\"Milo\\",\\"text\\":\\"hello\\"}", msg.toJson());\n    }\n\n    @Test\n    void testFromJson() {\n        Message msg = Message.fromJson("{\\"sender\\":\\"Milo\\",\\"text\\":\\"hello\\"}");\n        assertEquals("Milo", msg.sender);\n        assertEquals("hello", msg.text);\n    }\n}', note:'Running this needs JUnit wired into your project. The easiest route as a beginner: open the folder in IntelliJ IDEA Community (free) — the moment it sees a @Test, it will offer to download and configure JUnit for you automatically.'},
+        {title:'Where to take it from here', explain:'This one small project already touched four chapters at once. Every other chapter in this notebook is one more direction you could take it in next: <ul style="margin:8px 0 0 18px; padding:0;"><li>swap the hand-rolled JSON for the real org.json library, and set up a pom.xml from the Build Scripts chapter to manage it</li><li>write a Dockerfile from the Docker chapter and run ChatServer inside a container</li><li>add a Databases chapter table that logs every message to real SQL instead of just printing it</li><li>write a small pipeline from the Pipelines chapter that runs MessageTest automatically on every push</li><li>split ChatServer\'s responsibilities into smaller classes using the OOP chapter\'s ideas</li><li>next time, try writing MessageTest FIRST, before Message.java even exists — that is the TDD chapter, for real</li></ul>'}
+      ]
+    },
+    { id:'shelter', label:'II. Dog Shelter API', title:'Build a Real Thing: A Dog Shelter REST API', blurb:'A small HTTP API you can actually call with curl — ties together APIs, protocols, JSON, OOP, and a real database.',
+      steps:[
+        {title:'What we\'re building, and why', explain:'A tiny REST API for a dog shelter — GET /dogs lists every dog, POST /dogs adds one — using nothing but the JDK\'s own built-in HttpServer, so there is no framework to install before you can start. You will build it against a simple in-memory list first, then swap that for a real SQLite database without changing the API layer at all — which is the whole point of the OOP encapsulation from that chapter finally paying off in a real project.'},
+        {title:'Folder structure', explain:'Same idea as the chat app: the package name has to match the folder path.', code:'shelter-api/\n  src/\n    main/\n      java/\n        shelter/\n          Dog.java\n          DogStore.java\n          ShelterServer.java'},
+        {title:'Write Dog.java', explain:'A plain, small class — this is the OOP chapter\'s "classes and objects" concept, doing real work: private fields, a constructor, and a toJson() method so this object can turn itself into the text an API response needs.', code:'package shelter;\n\npublic class Dog {\n    private static int nextId = 1;\n    int id;\n    String name;\n    int age;\n\n    public Dog(String name, int age) {\n        this.id = nextId++;\n        this.name = name;\n        this.age = age;\n    }\n\n    public String toJson() {\n        return "{\\"id\\":" + id + ",\\"name\\":\\"" + name + "\\",\\"age\\":" + age + "}";\n    }\n}'},
+        {title:'Write DogStore.java — an in-memory "database" for now', explain:'DogStore hides exactly how dogs are stored behind a small, clean set of methods. Right now that is just an ArrayList — but because nothing outside this class touches that list directly, you can swap the internals for a real database later without breaking anything that calls it. That is encapsulation, doing actual work.', code:'package shelter;\n\nimport java.util.ArrayList;\nimport java.util.List;\n\npublic class DogStore {\n    private List<Dog> dogs = new ArrayList<>();\n\n    public synchronized void add(Dog dog) {\n        dogs.add(dog);\n    }\n\n    public synchronized List<Dog> getAll() {\n        return new ArrayList<>(dogs);\n    }\n}', note:'synchronized here is not decoration — a real server can receive two requests from two different clients at the exact same moment, on two different threads. Same reason as the synchronized chapter, showing up again.'},
+        {title:'Write ShelterServer.java — HTTP methods and status codes, for real', explain:'com.sun.net.httpserver.HttpServer ships with the JDK. It reads the incoming request\'s method (GET or POST) and writes back a real status code — 200 for a successful read, 201 for something newly created, 405 for a method the endpoint does not support — exactly the status code families from the Protocols chapter, now something you are choosing yourself instead of just reading about.', code:'package shelter;\n\nimport com.sun.net.httpserver.HttpServer;\nimport com.sun.net.httpserver.HttpExchange;\nimport java.io.*;\nimport java.net.InetSocketAddress;\nimport java.nio.charset.StandardCharsets;\n\npublic class ShelterServer {\n    static DogStore store = new DogStore();\n\n    public static void main(String[] args) throws IOException {\n        HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);\n        server.createContext("/dogs", ShelterServer::handleDogs);\n        server.start();\n        System.out.println("Shelter API running on http://localhost:8000/dogs");\n    }\n\n    static void handleDogs(HttpExchange exchange) throws IOException {\n        if (exchange.getRequestMethod().equals("GET")) {\n            StringBuilder json = new StringBuilder("[");\n            var all = store.getAll();\n            for (int i = 0; i < all.size(); i++) {\n                json.append(all.get(i).toJson());\n                if (i < all.size() - 1) json.append(",");\n            }\n            json.append("]");\n            sendResponse(exchange, 200, json.toString());\n\n        } else if (exchange.getRequestMethod().equals("POST")) {\n            String body = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);\n            String name = body.split("\\"name\\":\\"")[1].split("\\"")[0];\n            int age = Integer.parseInt(body.split("\\"age\\":")[1].replaceAll("[^0-9]", ""));\n            store.add(new Dog(name, age));\n            sendResponse(exchange, 201, "{\\"status\\":\\"created\\"}");\n\n        } else {\n            sendResponse(exchange, 405, "{\\"error\\":\\"method not allowed\\"}");\n        }\n    }\n\n    static void sendResponse(HttpExchange exchange, int statusCode, String body) throws IOException {\n        exchange.getResponseHeaders().set("Content-Type", "application/json");\n        byte[] bytes = body.getBytes(StandardCharsets.UTF_8);\n        exchange.sendResponseHeaders(statusCode, bytes.length);\n        OutputStream os = exchange.getResponseBody();\n        os.write(bytes);\n        os.close();\n    }\n}'},
+        {title:'Compile, run it, and actually call it', explain:'This is the same javac and java commands as the chat app — but this time, the other side of the conversation is a real HTTP client, not another one of your own Java programs.', code:'javac -d out src/main/java/shelter/*.java\njava -cp out shelter.ShelterServer', note:'In another terminal: curl http://localhost:8000/dogs to list dogs (empty at first), then curl -X POST http://localhost:8000/dogs -d "{\\"name\\":\\"Milo\\",\\"age\\":3}" to add one, then GET again to see it show up.'},
+        {title:'Swap in a real database — SQLite via JDBC', explain:'SQLite is a real SQL database that lives in a single file, with no server to install — perfect for practicing the Databases chapter\'s actual commands without extra setup. Rewrite DogStore\'s internals to use JDBC, while keeping add() and getAll() with the exact same signatures — nothing in ShelterServer needs to change at all.', code:'// DogStore.java, rewritten to use SQLite instead of an ArrayList\npackage shelter;\n\nimport java.sql.*;\nimport java.util.*;\n\npublic class DogStore {\n    private Connection conn;\n\n    public DogStore() throws SQLException {\n        conn = DriverManager.getConnection("jdbc:sqlite:shelter.db");\n        conn.createStatement().execute(\n            "CREATE TABLE IF NOT EXISTS dogs (id INTEGER PRIMARY KEY, name TEXT, age INTEGER)"\n        );\n    }\n\n    public void add(Dog dog) throws SQLException {\n        PreparedStatement stmt = conn.prepareStatement(\n            "INSERT INTO dogs (name, age) VALUES (?, ?)"\n        );\n        stmt.setString(1, dog.name);\n        stmt.setInt(2, dog.age);\n        stmt.executeUpdate();\n    }\n\n    public List<Dog> getAll() throws SQLException {\n        List<Dog> result = new ArrayList<>();\n        ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM dogs");\n        while (rs.next()) {\n            result.add(new Dog(rs.getString("name"), rs.getInt("age")));\n        }\n        return result;\n    }\n}', note:'You will need the sqlite-jdbc .jar on your classpath — search "sqlite-jdbc maven central" for the download, or add it as a dependency once you have set up a real build tool in the Ship It project. PreparedStatement with ? placeholders (instead of gluing the name straight into the SQL text) is also how real code avoids a security hole called SQL injection.'},
+        {title:'Bonus: a second way to persist data — Serializable backup', explain:'Add a /backup endpoint that freezes the current DogStore contents to a file using Java Serialization, the same ObjectOutputStream approach from the Serialization chapter — a genuinely different persistence strategy sitting right next to the database, so the contrast is concrete instead of abstract.', code:'// a small addition showing the idea — wire it into your own endpoint\nimport java.io.*;\n\nstatic void backupToFile(List<Dog> dogs) throws IOException {\n    ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("backup.dat"));\n    out.writeObject(new ArrayList<>(dogs));\n    out.close();\n}', note:'For this to compile, Dog needs "implements Serializable" added to its class declaration — exactly the requirement from that chapter.'},
+        {title:'Where to take it further', explain:'This project already covers APIs, Protocols, JSON, OOP, Databases, and Serialization in one place. Natural next steps: <ul style="margin:8px 0 0 18px; padding:0;"><li>add a DELETE /dogs/{id} endpoint and return 404 when the id does not exist</li><li>add pagination with a ?page= query parameter, from the APIs chapter</li><li>require an API key header before allowing POST requests</li><li>move on to the Ship It project and package this whole thing with Maven, Docker, and a pipeline</li></ul>'}
+      ]
+    },
+    { id:'ship', label:'III. Ship It', title:'Ship It: Package, Containerize, and Automate', blurb:'Take a project you already built and turn it from "runs on my machine" into something that builds, tests, and ships itself.',
+      steps:[
+        {title:'Why this project exists', explain:'Everything so far ran with plain javac, on your machine, by hand. Real projects use a build tool to manage dependencies, get packaged into a container so they run identically everywhere, and get tested automatically before a human ever clicks deploy. This project applies exactly that — Build Scripts, Docker, and Pipelines — to the Chat App or Shelter API you already built. Pick whichever one you still have on disk.'},
+        {title:'Convert it to a Maven project', explain:'Maven expects a specific folder shape and a pom.xml describing the project. If you followed the earlier projects, your src/main/java layout is already most of the way there.', code:'<project xmlns="http://maven.apache.org/POM/4.0.0">\n  <modelVersion>4.0.0</modelVersion>\n  <groupId>com.example</groupId>\n  <artifactId>shelter-api</artifactId>\n  <version>1.0.0</version>\n\n  <properties>\n    <maven.compiler.source>17</maven.compiler.source>\n    <maven.compiler.target>17</maven.compiler.target>\n  </properties>\n\n  <dependencies>\n    <dependency>\n      <groupId>org.junit.jupiter</groupId>\n      <artifactId>junit-jupiter</artifactId>\n      <version>5.10.0</version>\n      <scope>test</scope>\n    </dependency>\n  </dependencies>\n</project>', note:'Save this as pom.xml in the project root — the same folder that contains your src/ folder.'},
+        {title:'Build and test it with real Maven commands', explain:'These are the exact commands from the Build Scripts chapter, run against your own project this time instead of typed as an isolated answer.', code:'mvn compile\nmvn test\nmvn package', note:'mvn package puts a runnable jar under target/ — that jar is what the Dockerfile in the next step will actually copy in.'},
+        {title:'Write a Dockerfile for it', explain:'This is every instruction from the Docker chapter, assembled into one real file that packages your own project instead of a hypothetical one.', code:'FROM openjdk:17\nWORKDIR /app\nCOPY target/shelter-api-1.0.0.jar app.jar\nEXPOSE 8000\nENTRYPOINT ["java", "-jar", "app.jar"]', note:'Save this as a file literally named "Dockerfile" (no extension) in the project root.'},
+        {title:'Build and run the image', explain:'Same two commands as the Docker chapter — the difference is watching your own API respond from inside a container instead of taking it on faith.', code:'docker build -t shelter-api .\ndocker run -p 8000:8000 shelter-api', note:'Run curl http://localhost:8000/dogs again — it should behave identically to when you ran it with plain java, just now fully sealed inside a container.'},
+        {title:'Write a CI pipeline', explain:'A GitHub Actions workflow file, using the exact structure from the Pipelines chapter, that runs your tests automatically on every push — this is the actual assembly line, not a description of one.', code:'# .github/workflows/ci.yml\non:\n  push:\n    branches: [main]\n\njobs:\n  build-and-test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-java@v4\n        with:\n          java-version: "17"\n          distribution: "temurin"\n      - run: mvn test\n      - run: docker build -t shelter-api .', note:'This file has to live at exactly .github/workflows/ci.yml from your repository root — GitHub looks for workflows in that specific path.'},
+        {title:'Push it and watch it actually run', explain:'This step needs a real GitHub account and a new empty repository — create one, then push your project to it. Once pushed, click the "Actions" tab on the repository page and watch your pipeline run for real, with real logs, on GitHub\'s own servers, not a simulation.', code:'git init\ngit add .\ngit commit -m "first commit"\ngit remote add origin https://github.com/YOUR_USERNAME/shelter-api.git\ngit push -u origin main'},
+        {title:'Where to take it further', explain:'You now have the same pipeline shape real companies run. Natural next steps: <ul style="margin:8px 0 0 18px; padding:0;"><li>add a deploy stage that only runs if the test and build stages both succeeded</li><li>push the built image to Docker Hub as a real registry, using a secret for the login instead of hardcoding it</li><li>add a status badge to a README.md so anyone visiting the repo can see the pipeline is passing</li><li>split the pipeline into separate dev/staging/production environments</li></ul>'}
+      ]
+    },
+    { id:'tdd', label:'IV. TDD + Acceptance', title:'Test It Properly: TDD and Acceptance, for Real', blurb:'Build one small feature the disciplined way — test first, every time — then prove it works from a user\'s point of view too.',
+      steps:[
+        {title:'What we\'re building, and why', explain:'A PasswordValidator class, built strictly test-first — red, then green, then refactor, repeated — followed by one real Gherkin acceptance scenario describing the same feature in plain language. This is the TDD chapter and the Acceptance Testing chapter, done for real and in the correct order, instead of simulated one challenge at a time.'},
+        {title:'Folder structure', explain:'A small project, but with the same real structure as the others — tests live in their own parallel folder.', code:'password-check/\n  src/\n    main/\n      java/\n        pwcheck/\n          PasswordValidator.java\n    test/\n      java/\n        pwcheck/\n          PasswordValidatorTest.java'},
+        {title:'Red: write the first failing test', explain:'Write this BEFORE PasswordValidator.java exists at all. Run it (mvn test, or your IDE\'s test runner) and confirm it genuinely fails to even compile — that failure is not a mistake, it is the entire starting point of TDD.', code:'package pwcheck;\n\nimport org.junit.jupiter.api.Test;\nimport static org.junit.jupiter.api.Assertions.assertFalse;\n\nclass PasswordValidatorTest {\n\n    @Test\n    void testRejectsShortPassword() {\n        PasswordValidator validator = new PasswordValidator();\n        assertFalse(validator.isValid("abc"));\n    }\n}'},
+        {title:'Green: write just enough code to pass it', explain:'Nothing fancy — a length check, and nothing else yet. Resist the urge to add anything the current test does not actually require.', code:'package pwcheck;\n\npublic class PasswordValidator {\n    public boolean isValid(String password) {\n        return password.length() >= 8;\n    }\n}'},
+        {title:'Red again: a second failing test', explain:'One new behavior, one new test — requiring at least one digit.', code:'@Test\nvoid testRejectsPasswordWithNoDigit() {\n    PasswordValidator validator = new PasswordValidator();\n    assertFalse(validator.isValid("abcdefgh"));\n}'},
+        {title:'Green again: extend the implementation', explain:'Add just enough to make the new test pass, then re-run BOTH tests to confirm neither one broke the other.', code:'public boolean isValid(String password) {\n    if (password.length() < 8) return false;\n    boolean hasDigit = password.chars().anyMatch(Character::isDigit);\n    return hasDigit;\n}'},
+        {title:'Refactor', explain:'Clean the method up without changing what it does — pull the digit check into its own clearly named method. Re-run the tests immediately after; they should pass exactly as before, completely unchanged.', code:'public boolean isValid(String password) {\n    return hasMinLength(password) && hasDigit(password);\n}\n\nprivate boolean hasMinLength(String password) {\n    return password.length() >= 8;\n}\n\nprivate boolean hasDigit(String password) {\n    return password.chars().anyMatch(Character::isDigit);\n}'},
+        {title:'Keep the cycle going on your own', explain:'Do at least two or three more full red-green-refactor rounds yourself, without a code sample to lean on this time: require at least one uppercase letter, require at least one special character, and reject an empty string outright. Each one is its own small red-green-refactor loop, same shape as above.'},
+        {title:'Zoom out: write an acceptance scenario', explain:'Now describe the same feature from a user\'s point of view, in plain Gherkin, the way the Acceptance Testing chapter covered — this is a different, higher level than the unit tests above, and deliberately so.', code:'Feature: setting a password\n\n  Scenario: user sets a valid password\n    Given the user is on the account setup page\n    When they enter a password with 8+ characters and a digit\n    Then their account is created\n\n  Scenario: user tries a weak password\n    Given the user is on the account setup page\n    When they enter a password that is too short\n    Then they see an error asking for a stronger password', note:'Save this as password_setup.feature — the .feature extension is what tools like Cucumber look for.'},
+        {title:'Where to take it further', explain:'You have now practiced the full stack of testing disciplines this notebook covers, in the right order. Natural next steps: <ul style="margin:8px 0 0 18px; padding:0;"><li>wire the Gherkin scenarios up to real Cucumber @Given/@When/@Then step definitions that actually call PasswordValidator</li><li>add PasswordValidatorTest to the CI pipeline from the Ship It project, so it runs on every push</li><li>try applying the same red-green-refactor discipline to a small piece of the Shelter API, like validating a dog\'s age is not negative</li></ul>'}
+      ]
+    }
   ]
 },
 
@@ -1759,14 +1876,14 @@ const CHAPTERS = [
     {name:'What "the standard library" means', explain:'Java comes with a huge amount of ready-made, pre-tested code built in — no download, no setup, just an import line. Think of it as a fully stocked toolbox that comes with the house, versus buying every tool yourself.', code:'import java.util.ArrayList; // no installation needed — it ships with the JDK'},
     {name:'java.lang — the always-there package', explain:'java.lang is the one package so fundamental that Java imports it automatically, silently, every single time — no import line needed. It holds String, Math, Object, System, and the wrapper classes like Integer and Double.', code:'int max = Math.max(3, 7); // Math is in java.lang — no import required'},
     {name:'java.util — the collections toolbox', explain:'java.util holds the Collections framework: List, Set, and Map, plus the common classes that implement them. Almost every non-trivial Java program imports something from here.', code:'import java.util.List;\nimport java.util.ArrayList;'},
-    {name:'Lists: ArrayList vs LinkedList', explain:'Both implement List, but store data differently. ArrayList is backed by a resizable array, so reading any item by index is fast. LinkedList is backed by a chain of linked nodes, so inserting or removing in the middle is cheaper, at the cost of slower random access.', code:'List<String> names = new ArrayList<>(); // most common default choice'},
+    {name:'Lists: ArrayList vs LinkedList', explain:'Both implement List, but store data differently. ArrayList is backed by a resizable array, so reading any item by index is fast. LinkedList is backed by a chain of linked nodes, so inserting or removing in the middle is cheaper, at the cost of slower random access. Either way, .size() tells you how many elements are currently in the list.', code:'List<String> names = new ArrayList<>(); // most common default choice\nnames.add("Milo");\nSystem.out.println(names.size()); // 1'},
     {name:'Sets: HashSet vs TreeSet', explain:'A Set holds no duplicates. HashSet is fast but gives no guaranteed order. TreeSet keeps its elements sorted at all times, at a small performance cost for that ordering.', code:'Set<String> uniqueNames = new HashSet<>();\nSet<String> sortedNames = new TreeSet<>();'},
     {name:'Maps: HashMap vs TreeMap vs LinkedHashMap', explain:'A Map stores key-value pairs. HashMap is the fast, unordered default. TreeMap keeps keys sorted. LinkedHashMap remembers the order things were actually inserted in — useful when order matters but sorting does not.', code:'Map<String, Integer> ages = new HashMap<>();\nages.put("Milo", 3);'},
     {name:'The Streams API', explain:'Streams let you process a collection in a functional style — filter, transform, and collect results — often replacing a manual for-loop with something shorter and more declarative.', code:'List<Integer> evens = numbers.stream()\n    .filter(n -> n % 2 == 0)\n    .collect(Collectors.toList());'},
     {name:'java.time — modern dates and times', explain:'java.time (LocalDate, LocalDateTime, Duration, and friends) replaced the old, famously confusing java.util.Date and Calendar classes. Prefer java.time in any new code.', code:'LocalDate today = LocalDate.now();\nLocalDate birthday = LocalDate.of(2023, 5, 14);'},
     {name:'java.io and java.nio.file — reading and writing files', explain:'java.io holds the classic streams and readers (like the FileReader/BufferedReader you have already used). java.nio.file is the newer, often more convenient way to do common file tasks in a single line.', code:'List<String> lines = java.nio.file.Files.readAllLines(java.nio.file.Path.of("data.txt"));'},
     {name:'java.net — networking', explain:'This is where Socket, ServerSocket, and HttpClient actually live — the Sockets, Protocols, and APIs chapters have all been using this package the entire time, whether or not it was named directly.', code:'import java.net.Socket;\nimport java.net.http.HttpClient;'},
-    {name:'java.util.concurrent — the advanced multithreading toolbox', explain:'Beyond raw Thread and synchronized, this package holds the higher-level tools professionals reach for: ExecutorService for thread pools, ConcurrentHashMap for a thread-safe map, and AtomicInteger for lock-free counters — all covered earlier, all living in this one package.', code:'import java.util.concurrent.ExecutorService;\nimport java.util.concurrent.Executors;'},
+    {name:'java.util.concurrent — the advanced multithreading toolbox', explain:'Beyond raw Thread and synchronized, this package holds the higher-level tools professionals reach for: ExecutorService for thread pools, ConcurrentHashMap for a thread-safe map, and AtomicInteger for lock-free counters — all covered earlier, all living in this one package. .submit(...) hands a task to the pool, which runs it on whichever worker thread is free next.', code:'ExecutorService pool = Executors.newFixedThreadPool(4);\npool.submit(() -> System.out.println("task running"));'},
     {name:'Optional — a safer alternative to null', explain:'Optional<T> wraps a value that might or might not be present, making the possibility of "nothing here" visible in the method signature itself, instead of a silent null that can crash the program the moment someone forgets to check for it.', code:'Optional<String> maybeName = Optional.ofNullable(getName());\nif (maybeName.isPresent()) {\n    System.out.println(maybeName.get());\n}'},
     {name:'Popular third-party libraries', explain:'The standard library does not cover everything. Jackson and Gson handle JSON more fully than the org.json used in this notebook. Mockito handles mocking for tests. SLF4J with Logback handles proper logging instead of System.out.println. Apache Commons and Guava add general-purpose utility helpers. Lombok reduces boilerplate like getters and setters.', code:'// none of these ship with the JDK — they are added as dependencies, via Maven or Gradle'},
     {name:'How a dependency becomes usable code', explain:'Declaring a dependency in pom.xml or build.gradle (from the Build Scripts chapter) is what makes an import statement for an outside library actually resolve — the build tool downloads the library\'s jar file and puts it on the classpath before your code ever compiles.', code:'<dependency>\n  <groupId>com.fasterxml.jackson.core</groupId>\n  <artifactId>jackson-databind</artifactId>\n  <version>2.16.0</version>\n</dependency>'},
@@ -2032,8 +2149,8 @@ const CHAPTERS = [
      s:'// Testing phase — a JUnit test verifies the implementation actually matches what was required',
      m:['Assuming tests belong to Implementation just because they are also code — their purpose is verification, which is the Testing phase.','Giving no reasoning at all, just naming the phase.']},
     {p:'Write a comment stating which SDLC phase a Dockerfile and deployment pipeline belong to, and why.',
-     checks:[{l:'Mentions Deployment', t:/Deployment/i},{l:'Has a reason', t:/because|since|release|ship/i}],
-     s:'// Deployment phase — a Dockerfile and pipeline are about getting the finished, tested code out to real users',
+     checks:[{l:'Mentions Deployment', t:/Deployment/i},{l:'Has a reason', t:/because|since|release|ship|so that|used by|real users|out to/i}],
+     s:'// Deployment phase — a Dockerfile and pipeline exist so that the finished, tested code can ship out to real users',
      m:['Placing it under Implementation instead — writing the app and shipping the app are genuinely separate concerns.','Forgetting deployment usually assumes testing has already passed, not the other way around.']},
     {p:'Contrast Waterfall and Agile in your own words, as a comment.',
      checks:[{l:'Mentions Waterfall', t:/Waterfall/i},{l:'Mentions Agile', t:/Agile/i}],
@@ -2065,9 +2182,8 @@ const CHAPTERS = [
    ============================================================ */
 const MAX_ATTEMPTS = 5;
 function freshState(ch){
-  return ch.isProject
-    ? { doneSteps: ch.steps.map(()=>false) }
-    : { activeChallenge:0, items: ch.challenges.map(()=>({attempts:0, solved:false, revealed:false, lastCode:"", lastChecklist:null, lastResult:null})) };
+  if(ch.isCapstones) return { activeProject: 0 };
+  return { activeChallenge:0, items: ch.challenges.map(()=>({attempts:0, solved:false, revealed:false, lastCode:"", lastChecklist:null, lastResult:null})) };
 }
 let state = {};
 CHAPTERS.forEach(ch => { state[ch.id] = freshState(ch); });
@@ -2088,11 +2204,11 @@ async function saveProgress(){
 }
 
 function chapterSolvedCount(ch){
-  if(ch.isProject) return state[ch.id].doneSteps.filter(Boolean).length;
+  if(ch.isCapstones) return 0;
   return state[ch.id].items.filter(i=>i.solved).length;
 }
 function chapterTotalCount(ch){
-  return ch.isProject ? ch.steps.length : ch.challenges.length;
+  return ch.isCapstones ? ch.projects.length : ch.challenges.length;
 }
 
 /* ============================================================
@@ -2102,10 +2218,17 @@ function renderTabbar(){
   const bar = document.getElementById('tabbar');
   let html = `<div class="tabitem home-btn ${currentView==='home'?'active':''}" id="homeTab">🏠 Home</div>`;
   CHAPTERS.forEach(ch=>{
-    const solved = chapterSolvedCount(ch);
-    const done = solved === chapterTotalCount(ch);
-    html += `<div class="tabitem ${currentView===ch.id?'active':''} ${done?'done':''}" data-chid="${ch.id}">
-      <span class="dot">${done ? '✓' : solved}</span><span>${ch.tab}</span>
+    let dotHtml, doneClass = '';
+    if(ch.isCapstones){
+      dotHtml = ch.projects.length;
+    } else {
+      const solved = chapterSolvedCount(ch);
+      const done = solved === chapterTotalCount(ch);
+      doneClass = done ? 'done' : '';
+      dotHtml = done ? '✓' : solved;
+    }
+    html += `<div class="tabitem ${currentView===ch.id?'active':''} ${doneClass}" data-chid="${ch.id}">
+      <span class="dot">${dotHtml}</span><span>${ch.tab}</span>
     </div>`;
   });
   bar.innerHTML = html;
@@ -2117,14 +2240,14 @@ function renderTabbar(){
 
 function renderHome(){
   const root = document.getElementById('root');
-  const challengeChapters = CHAPTERS.filter(ch=>!ch.isProject);
+  const challengeChapters = CHAPTERS.filter(ch=>!ch.isCapstones);
   const totalChallenges = challengeChapters.reduce((s,ch)=>s+ch.challenges.length,0);
   const totalSolved = challengeChapters.reduce((s,ch)=>s+chapterSolvedCount(ch),0);
   const allDone = totalChallenges>0 && totalSolved===totalChallenges;
   let cards = CHAPTERS.map((ch,idx)=>{
-    const solved = chapterSolvedCount(ch);
-    const total = chapterTotalCount(ch);
-    const metaLabel = ch.isProject ? `${solved}/${total} steps checked off` : `${solved}/${total} challenges solved`;
+    const metaLabel = ch.isCapstones
+      ? `${ch.projects.length} real projects to build`
+      : `${chapterSolvedCount(ch)}/${chapterTotalCount(ch)} challenges solved`;
     return `<div class="chapter-card" data-chid="${ch.id}">
       <div class="num">CH. ${String(idx+1).padStart(2,'0')}</div>
       <h3>${ch.title}</h3>
@@ -2134,7 +2257,7 @@ function renderHome(){
   }).join('');
   const banner = allDone ? `<div class="completion-banner">
       <div class="stamp good" style="font-size:20px;">all challenges complete ✓</div>
-      <p class="completion-note">All ${totalChallenges} challenges solved. There's one more thing worth doing: the ★ Capstone chapter — an actual project, not another isolated task.</p>
+      <p class="completion-note">All ${totalChallenges} challenges solved. There's one more thing worth doing: the ★ Capstones chapter — actual projects, not isolated tasks.</p>
     </div>` : '';
   root.innerHTML = `
     ${banner}
@@ -2258,6 +2381,9 @@ function renderChapter(){
   const root = document.getElementById('root');
 
   const conceptsHtml = ch.concepts.map(cn=>{
+    if(cn.divider){
+      return `<div class="section-divider"><span>${cn.divider}</span></div>`;
+    }
     const mediaHtml = cn.svg
       ? `<div class="diagram-box">${cn.svg}</div>`
       : (cn.code ? `<pre><code>${esc(cn.code)}</code></pre>` : '');
@@ -2362,8 +2488,8 @@ function renderChapter(){
       if(e.key === 'Tab'){
         e.preventDefault();
         const start = box.selectionStart, end = box.selectionEnd;
-        box.value = box.value.slice(0, start) + '    ' + box.value.slice(end);
-        box.selectionStart = box.selectionEnd = start + 4;
+        box.value = box.value.slice(0, start) + '\t' + box.value.slice(end);
+        box.selectionStart = box.selectionEnd = start + 1;
         hlCode.innerHTML = highlightCode(box.value);
       }
     });
@@ -2372,42 +2498,43 @@ function renderChapter(){
   if(ch.hasPracticeBoard) renderBoardWidget();
 }
 
-function renderProject(ch){
+function renderCapstones(ch){
   const root = document.getElementById('root');
-  const pState = state[ch.id];
-  const doneCount = pState.doneSteps.filter(Boolean).length;
+  const cState = state[ch.id];
+  const project = ch.projects[cState.activeProject];
 
-  const stepsHtml = ch.steps.map((s,i)=>{
-    const done = pState.doneSteps[i];
-    return `
-    <div class="proj-step ${done?'done':''}">
+  const pickerHtml = ch.projects.map((p,i)=>`
+    <div class="capstone-pill ${i===cState.activeProject?'active':''}" data-i="${i}">${p.label}</div>
+  `).join('');
+
+  const stepsHtml = project.steps.map((s,i)=>`
+    <div class="proj-step">
       <div class="proj-step-head">
-        <label class="proj-check">
-          <input type="checkbox" data-i="${i}" ${done?'checked':''}>
-          <span class="proj-num">${done?'✓':(i+1)}</span>
-        </label>
+        <span class="proj-num">${i+1}</span>
         <h4>${s.title}</h4>
       </div>
       <p class="concept-explain">${s.explain}</p>
       ${s.code ? `<pre><code>${esc(s.code)}</code></pre>` : ''}
       ${s.note ? `<p class="proj-note">${s.note}</p>` : ''}
-    </div>`;
-  }).join('');
+    </div>
+  `).join('');
 
   root.innerHTML = `
-    <div class="chapter-eyebrow">capstone project</div>
+    <div class="chapter-eyebrow">capstone projects — pick one and build it end to end</div>
     <h2 class="chapter-title">${ch.title}</h2>
     <p class="home-lead">${ch.blurb}</p>
-    <p class="progress-line">${doneCount} / ${ch.steps.length} steps checked off — check each one off yourself as you actually do it</p>
+    <div class="capstone-picker">${pickerHtml}</div>
+
+    <h3 class="section-label">${project.title}</h3>
+    <p class="concept-explain" style="margin-bottom:var(--grid);">${project.blurb}</p>
     <div class="proj-steps">${stepsHtml}</div>
 
     ${renderLinks(ch)}
   `;
 
-  root.querySelectorAll('.proj-check input').forEach(cb=>{
-    cb.onchange = (e)=>{
-      const i = parseInt(e.target.getAttribute('data-i'),10);
-      pState.doneSteps[i] = e.target.checked;
+  root.querySelectorAll('.capstone-pill').forEach(el=>{
+    el.onclick = ()=>{
+      cState.activeProject = parseInt(el.getAttribute('data-i'),10);
       saveProgress();
       renderAll();
     };
@@ -2420,7 +2547,7 @@ function renderAll(){
     renderHome();
   } else {
     const ch = CHAPTERS.find(c=>c.id===currentView);
-    if(ch.isProject) renderProject(ch);
+    if(ch.isCapstones) renderCapstones(ch);
     else renderChapter();
   }
 }
@@ -2452,19 +2579,23 @@ function checkAnswer(ch, c, it){
 /* ============================================================
    SEARCH
    ============================================================ */
-function stripHtml(s){ return s.replace(/<[^>]+>/g, ''); }
+function stripHtml(s){ return (s || '').replace(/<[^>]+>/g, ''); }
 
 function buildSearchIndex(){
   const index = [];
   CHAPTERS.forEach(ch=>{
     index.push({type:'chapter', chId:ch.id, title:ch.title, snippet:ch.blurb});
-    if(ch.isProject){
-      ch.steps.forEach((s,i)=>{
-        index.push({type:'step', chId:ch.id, title:`${ch.tab} — step ${i+1}: ${s.title}`, snippet:stripHtml(s.explain).slice(0,110)});
+    if(ch.isCapstones){
+      ch.projects.forEach((p,pi)=>{
+        index.push({type:'project', chId:ch.id, projectIdx:pi, title:`${ch.tab} — ${p.label}`, snippet:stripHtml(p.blurb).slice(0,110)});
+        p.steps.forEach((s,i)=>{
+          index.push({type:'step', chId:ch.id, projectIdx:pi, title:`${p.label} — step ${i+1}: ${s.title}`, snippet:stripHtml(s.explain).slice(0,110)});
+        });
       });
       return;
     }
     ch.concepts.forEach(cn=>{
+      if(cn.divider) return;
       index.push({type:'concept', chId:ch.id, title:cn.name, snippet:stripHtml(cn.explain).slice(0,110)});
     });
     ch.challenges.forEach((c,i)=>{
@@ -2502,6 +2633,7 @@ function runSearch(query){
         const m = matches[parseInt(el.getAttribute('data-i'),10)];
         currentView = m.chId;
         if(m.type==='challenge') state[m.chId].activeChallenge = m.challengeIdx;
+        if(m.type==='project' || m.type==='step') state[m.chId].activeProject = m.projectIdx;
         resultsBox.classList.remove('open');
         document.getElementById('searchInput').value = '';
         renderAll();
