@@ -5,27 +5,27 @@
 <title>Backend Basics — field notes</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --grid:28px;
-    --paper:#F1ECDA;
-    --paper-dark:#E7E0C6;
-    --line:#CFC6A4;
-    --ink:#1E2A33;
-    --ink-soft:#4b5a63;
-    --blue:#2A5C8A;
-    --red:#B23A2E;
-    --green:#3E7150;
-    --highlight:#F2C94C;
-    --card:#FBF8EF;
+    --paper:#F5F5F3;
+    --paper-dark:#E7E7E4;
+    --line:#CCCCCC;
+    --ink:#1F1F1F;
+    --ink-soft:#5A5A5A;
+    --blue:#454545;
+    --red:#6E6E6E;
+    --green:#2E2E2E;
+    --highlight:#DADAD7;
+    --card:#FFFFFF;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
     background:var(--paper-dark);
     color:var(--ink);
-    font-family:'Source Serif 4', Georgia, serif;
+    font-family:'Times New Roman', Times, Georgia, serif;
     font-size:15px;
     line-height:var(--grid);
   }
@@ -42,11 +42,11 @@
     border-bottom:2px solid var(--line);
   }
   header.masthead h1{
-    font-family:'Caveat',cursive;
+    font-weight:700;
+    font-family:'Times New Roman', Times, Georgia, serif;
     font-size:44px;
     margin:0;
     color:var(--ink);
-    transform:rotate(-0.6deg);
     line-height:1.1;
   }
   header.masthead .byline{
@@ -166,7 +166,7 @@
     letter-spacing:1px;
   }
   .chapter-card h3{
-    font-family:'Caveat',cursive;
+    font-family:'Times New Roman', Times, Georgia, serif;
     font-size:26px;
     margin:2px 0 4px 0;
     color:var(--ink);
@@ -193,7 +193,8 @@
     text-transform:uppercase;
   }
   h2.chapter-title{
-    font-family:'Caveat',cursive;
+    font-weight:700;
+    font-family:'Times New Roman', Times, Georgia, serif;
     font-size:38px;
     margin:0 0 var(--grid) 0;
     color:var(--ink);
@@ -214,7 +215,7 @@
     flex-wrap:wrap;
     gap:14px;
     margin:0 0 var(--grid) 0;
-    background:#fffef9;
+    background:#FAFAFA;
     border:1.5px solid var(--line);
     border-radius:8px;
     padding:14px;
@@ -234,11 +235,11 @@
     background:repeating-linear-gradient(90deg, var(--red) 0 6px, transparent 6px 11px);
   }
   .section-divider span{
-    font-family:'Caveat',cursive;
+    font-weight:700;
+    font-family:'Times New Roman', Times, Georgia, serif;
     font-size:26px;
     color:var(--red);
     white-space:nowrap;
-    transform:rotate(-1deg);
   }
   .diagram-box{
     background:var(--card);
@@ -251,15 +252,14 @@
   }
   .diagram-box svg{max-width:100%; height:auto;}
   .concept h4{
-    font-family:'Caveat',cursive;
+    font-family:'Times New Roman', Times, Georgia, serif;
     font-size:22px;
     color:var(--red);
     margin:0 0 2px 0;
-    transform:rotate(-0.5deg);
   }
   pre{
-    background:#232C33;
-    color:#E9E4D2;
+    background:#262626;
+    color:#E5E5E5;
     font-family:'JetBrains Mono',monospace;
     font-size:13px;
     padding:14px 16px;
@@ -307,7 +307,7 @@
     position:absolute;
     top:-11px; left:16px;
     background:var(--highlight);
-    color:#3a2c00;
+    color:#1F1F1F;
     font-family:'JetBrains Mono',monospace;
     font-size:11px;
     font-weight:700;
@@ -323,7 +323,7 @@
     min-height:150px;
     border:1.5px solid var(--ink-soft);
     border-radius:6px;
-    background:#fffdf6;
+    background:#FAFAFA;
     overflow:hidden;
   }
   .code-editor .highlight-layer{
@@ -366,19 +366,19 @@
   textarea.answer-box:focus{outline:2px solid var(--blue); outline-offset:1px;}
   .tok-kw{color:var(--blue); font-weight:700;}
   .tok-str{color:var(--green);}
-  .tok-com{color:#8a8272; font-style:italic;}
+  .tok-com{color:#8A8A8A; font-style:italic;}
   .tok-num{color:var(--red);}
   .tok-ann{color:var(--red); font-weight:700;}
   .hint-box{
     margin-top:10px;
-    background:#fff8e6;
-    border:1.5px dotted #b8860b;
+    background:#FAFAFA;
+    border:1.5px dotted #999999;
     border-radius:6px;
     padding:9px 13px;
     font-size:13px;
     color:var(--ink);
   }
-  .hint-label{font-family:'Caveat',cursive; color:#8a6d00; font-size:17px; margin-right:5px;}
+  .hint-label{font-family:'Times New Roman', Times, Georgia, serif; color:#5A5A5A; font-size:17px; margin-right:5px;}
   .completion-banner{
     background:var(--card);
     border:2px dashed var(--green);
@@ -387,7 +387,7 @@
     margin-bottom:var(--grid);
     text-align:center;
   }
-  .completion-note{font-family:'Caveat',cursive; font-size:20px; color:var(--ink-soft); margin:8px 0 0 0;}
+  .completion-note{font-family:'Times New Roman', Times, Georgia, serif; font-size:20px; color:var(--ink-soft); margin:8px 0 0 0;}
   .progress-line{
     font-family:'JetBrains Mono',monospace;
     font-size:12px;
@@ -434,7 +434,7 @@
     display:flex;align-items:center;justify-content:center;
   }
   .proj-step h4{
-    font-family:'Caveat',cursive;
+    font-family:'Times New Roman', Times, Georgia, serif;
     font-size:22px;
     color:var(--red);
     margin:0;
@@ -442,12 +442,60 @@
   .proj-note{
     font-size:13px;
     color:var(--ink-soft);
-    background:#fff8e6;
+    background:#FAFAFA;
     border-left:3px solid var(--highlight);
     padding:8px 12px;
     margin-top:6px;
     border-radius:0 4px 4px 0;
   }
+  .interview-box{
+    background:var(--card);
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    padding:16px 20px;
+    margin-bottom:var(--grid);
+  }
+  .interview-hint{
+    font-family:'Times New Roman', Times, Georgia, serif;
+    font-size:17px;
+    color:var(--ink-soft);
+    margin:0 0 10px 0;
+  }
+  .interview-level{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11.5px;
+    text-transform:uppercase;
+    letter-spacing:0.8px;
+    color:var(--blue);
+    margin:12px 0 4px 0;
+  }
+  .interview-list{
+    margin:0 0 4px 0;
+    padding-left:20px;
+    font-size:14px;
+    line-height:22px;
+  }
+  .interview-list li{margin-bottom:6px;}
+  .mini-project{
+    background:#FAFAFA;
+    border:1.5px dashed var(--green);
+    border-radius:8px;
+    padding:16px 20px;
+    margin-bottom:var(--grid);
+  }
+  .mini-project h4{
+    font-family:'Times New Roman', Times, Georgia, serif;
+    font-size:24px;
+    color:var(--green);
+    margin:0 0 4px 0;
+  }
+  .proj-reqs{
+    margin:10px 0 0 0;
+    padding-left:20px;
+    font-size:14px;
+    line-height:22px;
+  }
+  .proj-reqs li{margin-bottom:4px;}
   .links-list{
     list-style:none;
     padding:0;
@@ -472,7 +520,7 @@
   .links-list a:hover{text-decoration:underline;}
 
   .board-section{
-    background:#fffef9;
+    background:#FAFAFA;
     border:1.5px solid var(--line);
     border-radius:8px;
     padding:16px 16px 18px 16px;
@@ -619,13 +667,13 @@
 
   .reveal{
     margin-top:16px;
-    background:#fffef9;
+    background:#FAFAFA;
     border:1.5px dashed var(--red);
     border-radius:6px;
     padding:14px 16px;
   }
   .reveal .rlabel{
-    font-family:'Caveat',cursive;
+    font-family:'Times New Roman', Times, Georgia, serif;
     font-size:19px;
     color:var(--red);
     display:block;
@@ -643,7 +691,7 @@
     text-align:center;
   }
   footer.page-footer .signoff{
-    font-family:'Caveat',cursive;
+    font-family:'Times New Roman', Times, Georgia, serif;
     font-size:18px;
     color:var(--ink-soft);
   }
@@ -758,6 +806,25 @@ const CHAPTERS = [
     {name:'Thread-safe collections', explain:'Regular collections like ArrayList and HashMap are not safe to share across threads without extra locking. java.util.concurrent provides ready-made thread-safe alternatives, like ConcurrentHashMap, that handle the locking internally.', code:'Map<String,Integer> scores = new ConcurrentHashMap<>();\nscores.put("Milo", 10); // safe even with multiple threads writing'},
     {name:'Naming, checking, and daemon threads', explain:'A few small but genuinely useful Thread methods: setName()/getName() label a thread so it is easier to identify in logs or a debugger; isAlive() tells you whether a thread has finished running yet; setDaemon(true), called BEFORE start(), marks a thread as background work that should not stop the whole program from exiting — the JVM kills daemon threads automatically once every non-daemon thread is done.', code:'Thread t = new Thread(() -> System.out.println("working"));\nt.setName("Worker-1");\nt.setDaemon(true);   // must be called before start()\nt.start();\n\nSystem.out.println(t.getName());  // "Worker-1"\nSystem.out.println(t.isAlive());  // true while it is still running'}
   ],
+  interview:[
+    {level:'Beginner', q:'What is a thread, and how is it different from the program just running normally?'},
+    {level:'Beginner', q:'What is the difference between calling .start() and calling .run() directly?'},
+    {level:'Beginner', q:'Why does Thread.sleep() need to be wrapped in a try/catch?'},
+    {level:'Intermediate', q:'Explain the difference between concurrency and parallelism.'},
+    {level:'Intermediate', q:'What is a thread pool, and why is it usually better than creating a new Thread for every task?'},
+    {level:'Intermediate', q:'What is a daemon thread, and when would you use setDaemon(true)?'},
+    {level:'Intermediate', q:'Walk through the thread lifecycle states, in order.'}
+  ],
+  project:{
+    title:'A Multi-Timer Console App',
+    blurb:'Build a small app that runs three independent countdown timers at once, each on its own thread, each printing its own progress without blocking the others.',
+    requirements:[
+      'A Timer class that extends Thread (or wraps a Runnable) and counts down from a given number of seconds, printing each second.',
+      'main() starts at least 3 timers with different durations, all running at the same time.',
+      'main() uses join() to wait for all three timers to finish before printing "All timers done."',
+      'At least one timer runs as a daemon thread, with a comment explaining why that choice does or does not matter here.'
+    ]
+  },
   challenges:[
     {p:'Create a class called <span class="inline-code">Greeter</span> that extends <span class="inline-code">Thread</span>. Inside run(), print "Hello Thread". Then create one and start it.',
      checks:[{l:'Class Greeter extends Thread', t:/class\s+Greeter\s+extends\s+Thread/i},{l:'Has a run() method', t:/public\s+void\s+run\s*\(\s*\)/i},{l:'Prints "Hello Thread"', t:/hello thread/i},{l:'Calls .start()', t:/\.start\s*\(\s*\)/i}],
@@ -819,6 +886,25 @@ const CHAPTERS = [
     {name:'Semaphore', explain:'Where a lock allows exactly one thread in at a time, a Semaphore allows up to N threads in at once — useful for things like limiting how many threads can hit a database connection pool simultaneously.', code:'Semaphore permits = new Semaphore(3); // only 3 threads at a time\npermits.acquire();\ntry { /* work */ } finally { permits.release(); }'},
     {name:'CountDownLatch', explain:'A CountDownLatch lets one or more threads wait until a set number of other threads have finished some work — like waiting for three chefs to each finish their dish before the waiter brings the whole meal out together.', code:'CountDownLatch latch = new CountDownLatch(3);\n// each worker calls latch.countDown() when done\nlatch.await(); // blocks until the count reaches 0'}
   ],
+  interview:[
+    {level:'Beginner', q:'What is a race condition?'},
+    {level:'Beginner', q:'What does the synchronized keyword actually do?'},
+    {level:'Beginner', q:'Why can two threads reading the same variable at the same time still cause bugs?'},
+    {level:'Intermediate', q:'What is the difference between synchronizing a whole method and synchronizing a block?'},
+    {level:'Intermediate', q:'What is a deadlock, and how can it happen with two locks?'},
+    {level:'Intermediate', q:'What does volatile do, and how is it different from synchronized?'},
+    {level:'Intermediate', q:'When would you reach for an AtomicInteger instead of synchronized?'}
+  ],
+  project:{
+    title:'A Thread-Safe Ticket Counter',
+    blurb:'Simulate 100 people trying to buy tickets from a pool of 50 at the same time, using multiple threads, and prove your counter never sells more tickets than exist.',
+    requirements:[
+      'A TicketBooth class with a synchronized method that sells one ticket only if any remain.',
+      'At least 20 threads all calling that method concurrently.',
+      'A final printed count proving exactly 50 tickets were sold, never more.',
+      'A comment explaining what would go wrong if synchronized were removed.'
+    ]
+  },
   challenges:[
     {p:'Write a class <span class="inline-code">PiggyBank</span> with an <span class="inline-code">int balance</span> field and a synchronized <span class="inline-code">deposit</span> method that adds an amount to it.',
      checks:[{l:'Class PiggyBank', t:/class\s+PiggyBank/i},{l:'Uses synchronized', t:/synchronized/i},{l:'Has deposit(...) method', t:/void\s+deposit\s*\(/i},{l:'Updates balance', t:/balance\s*\+=|balance\s*=\s*balance\s*\+/i}],
@@ -879,6 +965,25 @@ const CHAPTERS = [
     {name:'Blocking vs non-blocking sockets', explain:'The sockets covered so far are "blocking" — a call like accept() or readLine() just pauses your thread until something happens. Java NIO offers non-blocking sockets and a Selector, which let one single thread watch many connections at once instead of needing one thread per client — more complex, but far more scalable for lots of connections.', code:'Selector selector = Selector.open();\nchannel.register(selector, SelectionKey.OP_ACCEPT);'},
     {name:'Buffering and flushing', explain:'Data written to a socket often sits in a buffer instead of going out immediately, for efficiency. flush() (or the auto-flush option on PrintWriter) forces whatever is buffered to actually be sent right away, instead of waiting for the buffer to fill up.', code:'PrintWriter out = new PrintWriter(socket.getOutputStream(), true); // true = auto-flush'}
   ],
+  interview:[
+    {level:'Beginner', q:'What is the difference between a Socket and a ServerSocket?'},
+    {level:'Beginner', q:'What does accept() actually do?'},
+    {level:'Beginner', q:'Why does a socket need both an input stream and an output stream?'},
+    {level:'Intermediate', q:'Walk through the TCP three-way handshake in your own words.'},
+    {level:'Intermediate', q:'Why does a real server usually hand each client off to its own thread?'},
+    {level:'Intermediate', q:'What does setSoTimeout() protect against?'},
+    {level:'Intermediate', q:'What is the difference between TCP and UDP, and when would you choose UDP?'}
+  ],
+  project:{
+    title:'A Simple Echo Server',
+    blurb:'Build a server that echoes back whatever a client sends it, in uppercase, and can handle more than one client at once.',
+    requirements:[
+      'An EchoServer that listens on a port and accepts connections in a loop.',
+      'Each client handled on its own thread.',
+      'The server converts each received line to uppercase before echoing it back.',
+      'Tested with at least two clients connected to the server at the same time.'
+    ]
+  },
   challenges:[
     {p:'Write the server side: create a <span class="inline-code">ServerSocket</span> on port 5000, call <span class="inline-code">accept()</span> and store the result in <span class="inline-code">clientSocket</span>, then print "Client connected!".',
      checks:[{l:'ServerSocket on port 5000', t:/new\s+ServerSocket\s*\(\s*5000\s*\)/i},{l:'accept() stored in clientSocket', t:/clientSocket\s*=[^;]*\.accept\s*\(\s*\)/i},{l:'Prints "Client connected!"', t:/client connected/i}],
@@ -942,6 +1047,25 @@ const CHAPTERS = [
     {name:'HTTP/1.1 vs HTTP/2', explain:'HTTP/1.1 sends requests over a connection mostly one at a time. HTTP/2 can send many requests over a single connection at once and compresses headers, which is why modern sites often feel noticeably faster without changing any of your actual code.', code:'// same HTTP methods and status codes — HTTP/2 just moves them more efficiently'},
     {name:'Idempotency', explain:'A request is idempotent if making it once has the same end effect as making it five times. GET, PUT, and DELETE are meant to be idempotent — repeating them should not cause extra side effects. POST is not — submitting the same "create an order" request twice can create two orders.', code:'// safe to retry: GET, PUT, DELETE\n// risky to retry blindly: POST'}
   ],
+  interview:[
+    {level:'Beginner', q:'What is a protocol, in plain terms?'},
+    {level:'Beginner', q:'What is the difference between HTTP and HTTPS?'},
+    {level:'Beginner', q:'What do the status codes 200, 404, and 500 each mean?'},
+    {level:'Intermediate', q:'What is the difference between TCP and UDP?'},
+    {level:'Intermediate', q:'Explain how a port number is different from an IP address.'},
+    {level:'Intermediate', q:'What is the purpose of a cookie, and why does HTTP need one at all?'},
+    {level:'Intermediate', q:'Walk through what happens, step by step, from typing a URL to seeing a page load.'}
+  ],
+  project:{
+    title:'A Status Code Checker',
+    blurb:'Write a small Java program that checks a list of URLs and reports whether each one is reachable, redirecting, or broken, based on the actual status code returned.',
+    requirements:[
+      'Uses HttpClient to send a GET request to at least 5 different URLs.',
+      'Prints each URL next to its status code.',
+      'Groups and labels results by category: success (2xx), redirect (3xx), client error (4xx), server error (5xx).',
+      'Handles a URL that fails to connect at all without crashing the whole program.'
+    ]
+  },
   challenges:[
     {p:'Write two variables: <span class="inline-code">HTTP_PORT</span> set to the standard HTTP port, and <span class="inline-code">HTTPS_PORT</span> set to the standard HTTPS port.',
      checks:[{l:'HTTP_PORT = 80', t:/HTTP_PORT\s*=\s*80/i},{l:'HTTPS_PORT = 443', t:/HTTPS_PORT\s*=\s*443/i}],
@@ -1004,6 +1128,25 @@ const CHAPTERS = [
     {name:'Escaping special characters', explain:'Some characters can\'t appear raw inside a JSON string — a literal quote or backslash would break the format. They get "escaped" with a backslash, like \\" for a quote mark or \\n for a line break, so the parser knows to treat them as plain text, not structure.', code:'{"quote": "she said \\"hi\\""}'},
     {name:'JSON Schema', explain:'A JSON Schema is a separate JSON document that describes what "valid" JSON is supposed to look like for a given use case — which fields are required, what type each one should be — so data can be validated automatically instead of just hoped to be correct.', code:'{ "required": ["name", "age"], "properties": { "age": { "type": "number" } } }'}
   ],
+  interview:[
+    {level:'Beginner', q:'What is JSON, and why is it so widely used?'},
+    {level:'Beginner', q:'What is the difference between a JSON string and a JSONObject in Java?'},
+    {level:'Beginner', q:'What are the six JSON data types?'},
+    {level:'Intermediate', q:'What is the difference between parsing and serializing?'},
+    {level:'Intermediate', q:'How do you safely read a field that might not exist in a JSONObject?'},
+    {level:'Intermediate', q:'How would you loop through a JSONArray of objects and print one field from each?'},
+    {level:'Intermediate', q:'Why might a team choose Jackson or Gson over org.json for a larger project?'}
+  ],
+  project:{
+    title:'A Dog Profile Builder',
+    blurb:'Take user input from the console and build a JSON object describing a dog, then parse it back and print a formatted summary.',
+    requirements:[
+      'Prompts for name, age, and whether the dog is friendly.',
+      'Builds a JSONObject from that input using .put().',
+      'Converts it to a JSON string and prints it.',
+      'Parses that same string back into a new JSONObject and prints a friendly one-line summary from it.'
+    ]
+  },
   challenges:[
     {p:'By hand, write a raw JSON string describing a dog with three fields: <span class="inline-code">name</span> (text), <span class="inline-code">age</span> (a number), <span class="inline-code">friendly</span> (true or false).',
      checks:[{l:'Wrapped in { }', t:/\{[\s\S]*\}/},{l:'"name" is quoted text', t:/"name"\s*:\s*"[^"]+"/i},{l:'"age" is a bare number', t:/"age"\s*:\s*\d+/i},{l:'"friendly" is true/false, unquoted', t:/"friendly"\s*:\s*(true|false)\b/i}],
@@ -1064,6 +1207,25 @@ const CHAPTERS = [
     {name:'Customizing serialization', explain:'For unusual cases, a Serializable class can define its own private writeObject() and readObject() methods to take manual control over exactly how it gets frozen and thawed — useful when a field needs special handling that the default behavior can\'t do on its own.', code:'private void writeObject(ObjectOutputStream out) throws IOException {\n    out.defaultWriteObject();\n    // extra custom logic here\n}'},
     {name:'Alternatives to Java serialization', explain:"Java's built-in serialization only really works between Java programs, and carries some of the security risks mentioned above. Formats like JSON (covered in this notebook) or Protocol Buffers are often preferred for saving or sending data, since they're portable across languages and easier to inspect.", code:'// Java Serializable: Java-to-Java, binary\n// JSON / Protobuf: cross-language, more transparent'}
   ],
+  interview:[
+    {level:'Beginner', q:'What does it mean to serialize an object?'},
+    {level:'Beginner', q:'What does the Serializable interface actually require you to implement?'},
+    {level:'Beginner', q:'What is a transient field, and why would you use one?'},
+    {level:'Intermediate', q:'What two exceptions does readObject() throw, and why both?'},
+    {level:'Intermediate', q:'What is serialVersionUID for?'},
+    {level:'Intermediate', q:'What is the difference between Serializable and Externalizable?'},
+    {level:'Intermediate', q:'Why is deserializing data from an untrusted source risky?'}
+  ],
+  project:{
+    title:'A Save/Load Game Profile',
+    blurb:'Build a small PlayerProfile class that can be saved to a file and loaded back later, preserving progress between runs of the program.',
+    requirements:[
+      'A PlayerProfile class implementing Serializable with name, level, and score fields.',
+      'A save() method that writes the object to a file using ObjectOutputStream.',
+      'A load() method that reads it back using ObjectInputStream, handling both exceptions it can throw.',
+      'A field (like a temporary session token) marked transient on purpose, with a comment explaining why.'
+    ]
+  },
   challenges:[
     {p:'Write a class <span class="inline-code">Player</span> with <span class="inline-code">String name</span> and <span class="inline-code">int score</span>, made serializable.',
      checks:[{l:'Class Player', t:/class\s+Player/i},{l:'implements Serializable', t:/implements\s+Serializable/i},{l:'String name field', t:/String\s+name/i},{l:'int score field', t:/int\s+score/i}],
@@ -1127,6 +1289,25 @@ const CHAPTERS = [
     {name:'Webhooks', explain:"A normal API call is you asking a server for something. A webhook flips that around — you give the server a URL of yours, and it calls YOU when something happens later, like a payment succeeding, instead of you having to keep asking \"is it done yet?\"", code:'// you register: https://yourapp.com/webhooks/payment-completed\n// the API POSTs to that URL whenever a payment finishes'},
     {name:'Versioning an API', explain:'APIs change over time, and breaking every existing user\'s code with each change would be a disaster. Many APIs put a version number right in the URL (like /v1/ or /v2/), so old and new versions can run side by side while users migrate on their own schedule.', code:'https://api.example.com/v1/dogs\nhttps://api.example.com/v2/dogs'}
   ],
+  interview:[
+    {level:'Beginner', q:'What is an API, in plain terms?'},
+    {level:'Beginner', q:'What is the difference between GET and POST?'},
+    {level:'Beginner', q:'What does a status code tell you about a response?'},
+    {level:'Intermediate', q:'What is REST, and how does it use URLs and HTTP methods together?'},
+    {level:'Intermediate', q:'What is the difference between an API key and a Bearer token?'},
+    {level:'Intermediate', q:'What is rate limiting, and what status code usually signals you have hit it?'},
+    {level:'Intermediate', q:'Why is pagination necessary for large result sets?'}
+  ],
+  project:{
+    title:'A Weather Lookup Tool',
+    blurb:'Build a console app that asks for a city, calls a free weather API, and prints a friendly summary of the current conditions.',
+    requirements:[
+      'Uses HttpClient to call a free API like Open-Meteo.',
+      'Parses the JSON response and extracts at least temperature and conditions.',
+      'Handles a non-200 status code gracefully instead of crashing.',
+      'Lets the user look up more than one city without restarting the program.'
+    ]
+  },
   challenges:[
     {p:'Build and send a GET request to the free Open-Meteo weather API, then print the response body.',
      checks:[{l:'Uses HttpClient', t:/HttpClient/i},{l:'Uses HttpRequest', t:/HttpRequest/i},{l:'Calls .send(', t:/\.send\s*\(/i},{l:'Has an https:// URL', t:/https:\/\//i},{l:'Prints something', t:/System\.out\.println/i}],
@@ -1189,6 +1370,25 @@ const CHAPTERS = [
     {name:'.dockerignore', explain:'Just like .gitignore, a .dockerignore file lists files and folders that should NOT be copied into the image — like local build output or secrets — keeping images smaller and avoiding accidentally shipping things that shouldn\'t be there.', code:'target/\n.git\n.env'},
     {name:'Container networks', explain:'By default, containers can\'t automatically see each other. Docker networks let you put several containers (like your app and its database) on the same virtual network so they can talk to each other by name, without exposing that traffic to the outside world.', code:'// docker network create my-network\n// docker run --network my-network myapp'}
   ],
+  interview:[
+    {level:'Beginner', q:'What is a container, in plain terms?'},
+    {level:'Beginner', q:'What is the difference between an image and a container?'},
+    {level:'Beginner', q:'What does the EXPOSE instruction actually do, and not do?'},
+    {level:'Intermediate', q:'Walk through what each line of a basic Dockerfile does.'},
+    {level:'Intermediate', q:'What is the difference between docker run and docker start?'},
+    {level:'Intermediate', q:'What is a volume, and why do you need one?'},
+    {level:'Intermediate', q:'What is a multi-stage build, and why would you use one?'}
+  ],
+  project:{
+    title:'Containerize a Small App',
+    blurb:'Take any small Java console app you have already built and package it into a Docker image that runs identically on any machine with Docker installed.',
+    requirements:[
+      'A Dockerfile with FROM, WORKDIR, COPY, and ENTRYPOINT.',
+      'docker build succeeds and produces a tagged image.',
+      'docker run actually runs the app and produces correct output.',
+      'A short README section explaining the two commands needed to build and run it.'
+    ]
+  },
   challenges:[
     {p:'Write the first line of a Dockerfile, starting from the <span class="inline-code">openjdk:17</span> base image.',
      checks:[{l:'FROM openjdk:17', t:/FROM\s+openjdk:17/i}],
@@ -1276,6 +1476,25 @@ const CHAPTERS = [
     {name:'Rollbacks and blue-green deployment', explain:'If a deployment goes wrong, a rollback switches back to the last known-good version. Blue-green deployment keeps two identical environments (blue and green) and switches traffic between them instantly, so a bad release can be undone by just flipping back, with no downtime.', code:'// blue: currently live, v1\n// green: newly deployed, v2 — switch traffic once verified, or flip back if not'},
     {name:'Branch strategies', explain:'Different branches often trigger different pipeline behavior — a feature branch might just run tests, while merging to main might trigger a full build-test-deploy pipeline. This keeps experimental work from accidentally reaching production.', code:'on:\n  push:\n    branches: [main]      # full deploy pipeline\n  pull_request: {}        # tests only, no deploy'}
   ],
+  interview:[
+    {level:'Beginner', q:'What does CI/CD stand for?'},
+    {level:'Beginner', q:'What triggers a pipeline to run?'},
+    {level:'Beginner', q:'What happens if one step in a pipeline fails?'},
+    {level:'Intermediate', q:'What is the difference between Continuous Delivery and Continuous Deployment?'},
+    {level:'Intermediate', q:'Why does a pipeline usually run tests before building a Docker image, not after?'},
+    {level:'Intermediate', q:'What is a pipeline secret, and why should it never be hardcoded in the YAML?'},
+    {level:'Intermediate', q:'What is the point of caching dependencies in a pipeline?'}
+  ],
+  project:{
+    title:'A Real CI Pipeline for a Project You Built',
+    blurb:'Push one of your existing Java projects to GitHub and add a real GitHub Actions workflow that builds and tests it automatically.',
+    requirements:[
+      'A .github/workflows/ci.yml file that triggers on every push to main.',
+      'Steps that check out the code, set up Java, and run the project\'s tests.',
+      'A passing pipeline run visible in the repository\'s Actions tab.',
+      'A short explanation of what would happen if a test were broken on purpose.'
+    ]
+  },
   challenges:[
     {p:'Write a YAML trigger that runs the pipeline whenever code is pushed to the "main" branch.',
      checks:[{l:'Has "on:" trigger', t:/on\s*:/i},{l:'Triggers on push', t:/push\s*:/i},{l:'References the main branch', t:/main/i}],
@@ -1343,6 +1562,25 @@ const CHAPTERS = [
     {name:'Parameterized tests', explain:'Instead of writing several nearly-identical test methods for different inputs, a parameterized test runs the same test logic once for each value in a list you provide.', code:'@ParameterizedTest\n@ValueSource(ints = {2, 4, 6})\nvoid testIsEven(int n) { assertTrue(n % 2 == 0); }'},
     {name:'Test coverage', explain:'Test coverage is a percentage measuring how much of your code actually gets run by your tests. It is a useful signal for spotting untested areas, but a high number does not by itself prove the code is correct.', code:'// 85% coverage means 85% of lines ran during testing — not that they are all bug-free'}
   ],
+  interview:[
+    {level:'Beginner', q:'What does the @Test annotation do?'},
+    {level:'Beginner', q:'What is the difference between assertEquals and assertTrue?'},
+    {level:'Beginner', q:'What happens if a test method has no assertions at all?'},
+    {level:'Intermediate', q:'What is the difference between @BeforeEach and @BeforeAll?'},
+    {level:'Intermediate', q:'How would you test that a method throws a specific exception?'},
+    {level:'Intermediate', q:'What is a mock, and why would you use one instead of a real dependency?'},
+    {level:'Intermediate', q:'What does test coverage measure, and what does it NOT guarantee?'}
+  ],
+  project:{
+    title:'A Fully Tested Calculator',
+    blurb:'Build a small Calculator class and a genuinely thorough JUnit test suite for it, covering normal cases, edge cases, and error cases.',
+    requirements:[
+      'Methods for add, subtract, multiply, and divide.',
+      'At least 8 test methods total, covering typical values and edge cases like zero and negative numbers.',
+      'A test using assertThrows to confirm dividing by zero throws the right exception.',
+      'A @BeforeEach method that creates a fresh Calculator before every test.'
+    ]
+  },
   challenges:[
     {p:'Write a JUnit test method <span class="inline-code">testAddition</span> that checks 2 + 2 equals 4, using assertEquals and the @Test annotation.',
      checks:[{l:'Has @Test', t:/@Test/i},{l:'Method testAddition', t:/testAddition/i},{l:'Uses assertEquals(', t:/assertEquals\s*\(/i},{l:'Checks against 4', t:/\b4\b/}],
@@ -1415,37 +1653,37 @@ const CHAPTERS = [
      svg:'<div class="join-diagrams">'
        +'<svg viewBox="0 0 150 132" width="150" height="132">'
          +'<defs><clipPath id="clipInner"><circle cx="95" cy="52" r="38"/></clipPath></defs>'
-         +'<circle cx="55" cy="52" r="38" fill="none" stroke="#1E2A33" stroke-width="2"/>'
-         +'<circle cx="95" cy="52" r="38" fill="none" stroke="#1E2A33" stroke-width="2"/>'
-         +'<circle cx="55" cy="52" r="38" fill="#F2C94C" clip-path="url(#clipInner)"/>'
-         +'<text x="30" y="20" font-size="10" fill="#4b5a63" font-family="JetBrains Mono, monospace">dogs</text>'
-         +'<text x="102" y="20" font-size="10" fill="#4b5a63" font-family="JetBrains Mono, monospace">owners</text>'
-         +'<text x="75" y="112" text-anchor="middle" font-size="11" font-weight="700" fill="#1E2A33" font-family="JetBrains Mono, monospace">INNER JOIN</text>'
-         +'<text x="75" y="126" text-anchor="middle" font-size="9" fill="#4b5a63" font-family="Source Serif 4, serif">only matching rows</text>'
+         +'<circle cx="55" cy="52" r="38" fill="none" stroke="#1F1F1F" stroke-width="2"/>'
+         +'<circle cx="95" cy="52" r="38" fill="none" stroke="#1F1F1F" stroke-width="2"/>'
+         +'<circle cx="55" cy="52" r="38" fill="#B0B0AC" clip-path="url(#clipInner)"/>'
+         +'<text x="30" y="20" font-size="10" fill="#5A5A5A" font-family="JetBrains Mono, monospace">dogs</text>'
+         +'<text x="102" y="20" font-size="10" fill="#5A5A5A" font-family="JetBrains Mono, monospace">owners</text>'
+         +'<text x="75" y="112" text-anchor="middle" font-size="11" font-weight="700" fill="#1F1F1F" font-family="JetBrains Mono, monospace">INNER JOIN</text>'
+         +'<text x="75" y="126" text-anchor="middle" font-size="9" fill="#5A5A5A" font-family="Times New Roman, serif">only matching rows</text>'
        +'</svg>'
        +'<svg viewBox="0 0 150 132" width="150" height="132">'
-         +'<circle cx="95" cy="52" r="38" fill="none" stroke="#1E2A33" stroke-width="2"/>'
-         +'<circle cx="55" cy="52" r="38" fill="#F2C94C" fill-opacity="0.55" stroke="#1E2A33" stroke-width="2"/>'
-         +'<text x="30" y="20" font-size="10" fill="#4b5a63" font-family="JetBrains Mono, monospace">dogs</text>'
-         +'<text x="102" y="20" font-size="10" fill="#4b5a63" font-family="JetBrains Mono, monospace">owners</text>'
-         +'<text x="75" y="112" text-anchor="middle" font-size="11" font-weight="700" fill="#1E2A33" font-family="JetBrains Mono, monospace">LEFT JOIN</text>'
-         +'<text x="75" y="126" text-anchor="middle" font-size="9" fill="#4b5a63" font-family="Source Serif 4, serif">all of left + matches</text>'
+         +'<circle cx="95" cy="52" r="38" fill="none" stroke="#1F1F1F" stroke-width="2"/>'
+         +'<circle cx="55" cy="52" r="38" fill="#B0B0AC" fill-opacity="0.55" stroke="#1F1F1F" stroke-width="2"/>'
+         +'<text x="30" y="20" font-size="10" fill="#5A5A5A" font-family="JetBrains Mono, monospace">dogs</text>'
+         +'<text x="102" y="20" font-size="10" fill="#5A5A5A" font-family="JetBrains Mono, monospace">owners</text>'
+         +'<text x="75" y="112" text-anchor="middle" font-size="11" font-weight="700" fill="#1F1F1F" font-family="JetBrains Mono, monospace">LEFT JOIN</text>'
+         +'<text x="75" y="126" text-anchor="middle" font-size="9" fill="#5A5A5A" font-family="Times New Roman, serif">all of left + matches</text>'
        +'</svg>'
        +'<svg viewBox="0 0 150 132" width="150" height="132">'
-         +'<circle cx="55" cy="52" r="38" fill="none" stroke="#1E2A33" stroke-width="2"/>'
-         +'<circle cx="95" cy="52" r="38" fill="#F2C94C" fill-opacity="0.55" stroke="#1E2A33" stroke-width="2"/>'
-         +'<text x="30" y="20" font-size="10" fill="#4b5a63" font-family="JetBrains Mono, monospace">dogs</text>'
-         +'<text x="102" y="20" font-size="10" fill="#4b5a63" font-family="JetBrains Mono, monospace">owners</text>'
-         +'<text x="75" y="112" text-anchor="middle" font-size="11" font-weight="700" fill="#1E2A33" font-family="JetBrains Mono, monospace">RIGHT JOIN</text>'
-         +'<text x="75" y="126" text-anchor="middle" font-size="9" fill="#4b5a63" font-family="Source Serif 4, serif">all of right + matches</text>'
+         +'<circle cx="55" cy="52" r="38" fill="none" stroke="#1F1F1F" stroke-width="2"/>'
+         +'<circle cx="95" cy="52" r="38" fill="#B0B0AC" fill-opacity="0.55" stroke="#1F1F1F" stroke-width="2"/>'
+         +'<text x="30" y="20" font-size="10" fill="#5A5A5A" font-family="JetBrains Mono, monospace">dogs</text>'
+         +'<text x="102" y="20" font-size="10" fill="#5A5A5A" font-family="JetBrains Mono, monospace">owners</text>'
+         +'<text x="75" y="112" text-anchor="middle" font-size="11" font-weight="700" fill="#1F1F1F" font-family="JetBrains Mono, monospace">RIGHT JOIN</text>'
+         +'<text x="75" y="126" text-anchor="middle" font-size="9" fill="#5A5A5A" font-family="Times New Roman, serif">all of right + matches</text>'
        +'</svg>'
        +'<svg viewBox="0 0 150 132" width="150" height="132">'
-         +'<circle cx="55" cy="52" r="38" fill="#F2C94C" fill-opacity="0.5" stroke="#1E2A33" stroke-width="2"/>'
-         +'<circle cx="95" cy="52" r="38" fill="#F2C94C" fill-opacity="0.5" stroke="#1E2A33" stroke-width="2"/>'
-         +'<text x="30" y="20" font-size="10" fill="#4b5a63" font-family="JetBrains Mono, monospace">dogs</text>'
-         +'<text x="102" y="20" font-size="10" fill="#4b5a63" font-family="JetBrains Mono, monospace">owners</text>'
-         +'<text x="75" y="112" text-anchor="middle" font-size="11" font-weight="700" fill="#1E2A33" font-family="JetBrains Mono, monospace">FULL OUTER</text>'
-         +'<text x="75" y="126" text-anchor="middle" font-size="9" fill="#4b5a63" font-family="Source Serif 4, serif">everything, matched or not</text>'
+         +'<circle cx="55" cy="52" r="38" fill="#B0B0AC" fill-opacity="0.5" stroke="#1F1F1F" stroke-width="2"/>'
+         +'<circle cx="95" cy="52" r="38" fill="#B0B0AC" fill-opacity="0.5" stroke="#1F1F1F" stroke-width="2"/>'
+         +'<text x="30" y="20" font-size="10" fill="#5A5A5A" font-family="JetBrains Mono, monospace">dogs</text>'
+         +'<text x="102" y="20" font-size="10" fill="#5A5A5A" font-family="JetBrains Mono, monospace">owners</text>'
+         +'<text x="75" y="112" text-anchor="middle" font-size="11" font-weight="700" fill="#1F1F1F" font-family="JetBrains Mono, monospace">FULL OUTER</text>'
+         +'<text x="75" y="126" text-anchor="middle" font-size="9" fill="#5A5A5A" font-family="Times New Roman, serif">everything, matched or not</text>'
        +'</svg>'
      +'</div>',
      code:'-- INNER: only rows with a match on both sides\nSELECT * FROM dogs JOIN owners ON dogs.owner_id = owners.id;\n\n-- LEFT: every dog, even ones with no owner on file\nSELECT * FROM dogs LEFT JOIN owners ON dogs.owner_id = owners.id;\n\n-- RIGHT: every owner, even ones with no dog on file\nSELECT * FROM dogs RIGHT JOIN owners ON dogs.owner_id = owners.id;\n\n-- FULL OUTER: everything from both sides, matched where possible\nSELECT * FROM dogs FULL OUTER JOIN owners ON dogs.owner_id = owners.id;'},
@@ -1472,6 +1710,25 @@ const CHAPTERS = [
     {name:'Saving and querying without writing SQL', explain:'Once a class is mapped, an EntityManager (or a Spring Data JpaRepository, in larger projects) handles the actual INSERT and SELECT statements behind the scenes — you call methods on Java objects, and the ORM generates and runs the SQL for you.', code:'entityManager.persist(new Dog("Milo", 3));    // generates an INSERT, behind the scenes\nDog found = entityManager.find(Dog.class, 1); // generates a SELECT ... WHERE id = 1'},
     {name:'ORM vs raw JDBC — the actual trade-off', explain:'An ORM saves a huge amount of repetitive boilerplate and reduces SQL injection risk, since you are no longer hand-building query strings. But it can hide what is actually happening underneath — a badly designed entity relationship can generate wildly inefficient SQL without you ever writing a line of it yourself. Most real projects use an ORM for typical everyday work, and still drop down to raw JDBC or hand-written queries for anything performance-critical or unusual. Understanding JDBC first, before reaching for an ORM, is what makes that second option possible at all.'}
   ],
+  interview:[
+    {level:'Beginner', q:'What is the difference between a table and a database?'},
+    {level:'Beginner', q:'What is a primary key?'},
+    {level:'Beginner', q:'What does DDL stand for, and what does it deal with?'},
+    {level:'Intermediate', q:'Explain the difference between DDL, DML, DCL, and TCL, with one example command each.'},
+    {level:'Intermediate', q:'What is the difference between INNER JOIN and LEFT JOIN?'},
+    {level:'Intermediate', q:'What does the acronym ACID stand for?'},
+    {level:'Intermediate', q:'What is the difference between using raw JDBC and using an ORM like Hibernate?'}
+  ],
+  project:{
+    title:'A Dog Shelter Database, Queried From Java',
+    blurb:'Create a real SQLite database with a dogs table, populate it with sample data, and write a Java program using JDBC to query and print it.',
+    requirements:[
+      'A CREATE TABLE statement with at least 4 columns including a primary key.',
+      'At least 5 rows inserted using INSERT statements.',
+      'A Java program using JDBC and PreparedStatement to insert a new row safely.',
+      'A Java program that reads and prints every row using a ResultSet.'
+    ]
+  },
   challenges:[
     {p:'Write a <span class="inline-code">CREATE TABLE</span> statement for a "dogs" table with an id (INT, PRIMARY KEY), a name (VARCHAR), and an age (INT).',
      checks:[{l:'CREATE TABLE dogs', t:/CREATE\s+TABLE\s+dogs/i},{l:'Has a PRIMARY KEY', t:/PRIMARY\s+KEY/i},{l:'Has a name column', t:/name/i},{l:'Has an age column', t:/age/i}],
@@ -1523,18 +1780,36 @@ const CHAPTERS = [
     {label:'GNU Make — official manual', url:'https://www.gnu.org/software/make/manual/make.html'}
   ],
   concepts:[
-    {name:'What a build tool actually does', explain:'A build tool automates compiling your code, running your tests, and packaging everything into something runnable — the same steps every time, instead of you remembering and typing them by hand.', code:'// like assembly instructions for furniture, followed exactly, every time'},
-    {name:'A complete pom.xml, explained line by line', explain:'This is not a fragment — it is a genuinely complete, working Maven project file for a small Java app with JUnit. Every real pom.xml you will ever open has these same core pieces: <ul style="margin:10px 0 0 18px; padding:0;">'
+    {name:'What a build tool actually does', explain:'A build tool automates the tasks needed to turn source code into something runnable — commonly clean, then compile, then test, then package. Instead of typing each of those commands by hand, every single time, a build tool runs them the same way, in the same order, automatically. That saves time, avoids repeated typing mistakes, keeps builds consistent between developers, and makes it far easier for someone else to build your project at all.', code:'clean -> compile -> test -> package\n// the same four steps, automated instead of typed by hand each time'},
+    {name:'Build tool vs. build script — they are not the same thing', explain:'A build tool is the actual program that performs the work — Maven, Gradle, and Make are all build tools. A build script is the file of instructions that tells a tool what to do — a pom.xml, a build.gradle, or a Makefile. The tool is the engine; the script is the set of directions you hand it.', code:'// build tool:   Maven, Gradle, Make (the programs)\n// build script:  pom.xml, build.gradle, Makefile (the instructions)'},
+
+    {divider:'Maven'},
+    {name:'What Maven is, and checking it is installed', explain:'Maven is a Java build automation and dependency management tool: it compiles code, runs tests, manages external libraries, packages applications, and cleans old build output — all through one command, mvn, typed in a terminal. Before using it, confirm it is actually installed.', code:'mvn --version\n// prints the installed Maven version and which Java it is using'},
+    {name:'A complete pom.xml, explained line by line', explain:'pom.xml stands for Project Object Model — the file that tells Maven everything about your project. This is not a fragment — it is a genuinely complete, working Maven project file for a small Java app with JUnit. Every real pom.xml you will ever open has these same core pieces: <ul style="margin:10px 0 0 18px; padding:0;">'
       +'<li style="margin-bottom:6px;"><code>&lt;?xml version="1.0"?&gt;</code> — every XML file starts with this line. It just tells the computer "this is XML, version 1.0" — you never need to think about it again.</li>'
       +'<li style="margin-bottom:6px;"><code>&lt;project&gt;...&lt;/project&gt;</code> — the single outer container. Everything about your project lives inside this one tag.</li>'
-      +'<li style="margin-bottom:6px;"><code>&lt;groupId&gt;com.example&lt;/groupId&gt;</code> — usually your company or personal domain, backwards. Groups related projects together.</li>'
+      +'<li style="margin-bottom:6px;"><code>&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</code> — tells Maven which POM model the file follows. This is not the Maven software\'s own version — for a normal project you almost always just leave this as 4.0.0.</li>'
+      +'<li style="margin-bottom:6px;"><code>&lt;groupId&gt;com.example&lt;/groupId&gt;</code> — identifies the organisation or person responsible for the project, usually a domain written backwards. Groups related projects together.</li>'
       +'<li style="margin-bottom:6px;"><code>&lt;artifactId&gt;dog-shelter&lt;/artifactId&gt;</code> — the actual name of THIS project. This becomes part of the built jar\'s filename.</li>'
-      +'<li style="margin-bottom:6px;"><code>&lt;version&gt;1.0.0&lt;/version&gt;</code> — this specific project\'s version number, following the MAJOR.MINOR.PATCH pattern covered below.</li>'
+      +'<li style="margin-bottom:6px;"><code>&lt;version&gt;1.0.0&lt;/version&gt;</code> — this specific project\'s version number, following the MAJOR.MINOR.PATCH pattern covered a few concepts down.</li>'
       +'<li style="margin-bottom:6px;"><code>&lt;properties&gt;</code> — small settings, here just fixing which Java version to compile for so it does not depend on whatever happens to be installed on a given machine.</li>'
       +'<li style="margin-bottom:6px;"><code>&lt;dependencies&gt;</code> — the list of outside libraries this project needs. Everything you learned in the Java Libraries chapter gets pulled in exactly like this.</li>'
       +'<li style="margin-bottom:6px;"><code>&lt;dependency&gt;...&lt;/dependency&gt;</code> — one single library: JUnit here, identified by its own groupId, artifactId, and version, plus a scope (covered a few concepts down).</li>'
       +'</ul>Save this exact file as <code>pom.xml</code> in your project\'s root folder, and <code>mvn test</code> already knows how to find and use it — no extra setup.',
      code:'<?xml version="1.0" encoding="UTF-8"?>\n<project xmlns="http://maven.apache.org/POM/4.0.0">\n    <modelVersion>4.0.0</modelVersion>\n\n    <groupId>com.example</groupId>\n    <artifactId>dog-shelter</artifactId>\n    <version>1.0.0</version>\n\n    <properties>\n        <maven.compiler.source>17</maven.compiler.source>\n        <maven.compiler.target>17</maven.compiler.target>\n    </properties>\n\n    <dependencies>\n        <dependency>\n            <groupId>org.junit.jupiter</groupId>\n            <artifactId>junit-jupiter</artifactId>\n            <version>5.10.0</version>\n            <scope>test</scope>\n        </dependency>\n    </dependencies>\n</project>'},
+    {name:'A standard Maven project structure', explain:'Maven expects a specific, predictable folder shape — once you know it, you can open ANY Maven project and immediately know where to look. src/main/java holds your actual application code. src/test/java holds your test code, in a completely separate tree so tests never accidentally ship inside the real application. pom.xml sits at the very root, next to both.', code:'project/\n│\n├── pom.xml\n│\n└── src/\n    ├── main/\n    │   └── java/     <- your application code\n    │\n    └── test/\n        └── java/     <- your test code'},
+    {name:"Maven's build lifecycle", explain:'Maven runs through ordered phases: validate, compile, test, package, verify, install, deploy. Running a later phase automatically runs every phase before it too — running "package" also compiles and tests first. That is why mvn package can fail before it ever gets to actually packaging anything: a failing test earlier in the chain stops it cold.', code:'validate -> compile -> test -> package -> verify -> install -> deploy'},
+    {name:'Dependency scopes', explain:'Not every dependency is needed the same way: "compile" scope is needed everywhere, "test" scope is only needed for running tests, and "provided" scope is available while building but expected to already exist wherever the app actually runs.', code:'<scope>test</scope>'},
+    {name:'Where dependencies come from', explain:'When you declare a dependency, the build tool first checks your local cache on your own machine. If it is not there yet, it downloads it from a remote repository, like Maven Central, and caches it locally for next time.', code:'// local cache first, then a remote repository like Maven Central'},
+    {name:'Maven plugins', explain:'Plugins are what actually let Maven perform specific tasks — compiling, testing, packaging, checking code style, generating files. Maven itself is mostly a coordinator; a plugin is what does the real work for one particular phase.', code:'Maven\n  -> plugin\n    -> specific task (compile / test / package / ...)'},
+    {name:'Semantic versioning', explain:'Most libraries use version numbers like 1.4.2, following MAJOR.MINOR.PATCH. PATCH means a bug fix (1.4.2 -> 1.4.3). MINOR means a new feature that does not break anything existing (1.4.2 -> 1.5.0). MAJOR means a breaking change (1.4.2 -> 2.0.0). Reading a version number this way tells you how risky an upgrade might be before you even open the changelog.', code:'1.4.2\n// MAJOR . MINOR . PATCH\n\n// bug fix      -> PATCH  (1.4.2 -> 1.4.3)\n// new feature  -> MINOR  (1.4.2 -> 1.5.0)\n// breaking     -> MAJOR  (1.4.2 -> 2.0.0)'},
+    {name:'SNAPSHOT versions', explain:'A version ending in -SNAPSHOT, like 1.0-SNAPSHOT, means "this version is still under active development" — not yet a finished release. When it is actually ready to ship, the SNAPSHOT suffix gets dropped (1.0-SNAPSHOT becomes 1.0.0), and work on the next version can then start under a new SNAPSHOT, like 1.1.0-SNAPSHOT.', code:'1.0-SNAPSHOT   -- still being worked on\n     |\n     v\n1.0.0          -- released\n     |\n     v\n1.1.0-SNAPSHOT -- next version, in progress'},
+    {name:'Multi-module projects', explain:'Larger projects are often split into several smaller modules (like an "api" module and a "core" module) that build together but can be developed and tested somewhat independently — a parent pom.xml or settings.gradle ties them together.', code:'// settings.gradle\ninclude "api", "core"'},
+    {name:'Build profiles', explain:'A profile lets you switch build settings depending on context — like using a different database URL for a local build versus a production one — without maintaining two entirely separate build files.', code:'<profiles>\n  <profile>\n    <id>production</id>\n  </profile>\n</profiles>'},
+    {name:'Clean builds', explain:'mvn clean removes previously generated build files — usually everything under target/ — before rebuilding from scratch. mvn clean package chains the two together: wipe out anything old, then build a fresh package, ruling out stale leftovers as the cause of a confusing bug.', code:'mvn clean\nmvn clean package'},
+    {name:'The complete relationship, all in one place', explain:'Every piece covered in this chapter fits into one chain, top to bottom. A build script (a Makefile) automates project commands. Maven is the actual tool that performs the Java build tasks those commands trigger. pom.xml is what configures Maven so it knows what to build in the first place. Keeping these three roles straight in your head — automator, doer, configuration — makes any new build tool you meet later far less confusing, because they all split the same way.', code:'BUILD SCRIPT\n     |\n  Makefile          (automates project commands)\n     |\n   Maven             (performs Java build tasks)\n     |\n  pom.xml            (configures the Maven project)\n     |\nJava Project'},
+
+    {divider:'Gradle'},
     {name:'The same project, as a complete build.gradle', explain:'Same project, same one dependency, Gradle\'s shorter syntax instead of XML: <ul style="margin:10px 0 0 18px; padding:0;">'
       +'<li style="margin-bottom:6px;"><code>plugins { id \'java\' }</code> — tells Gradle this is a Java project, which unlocks built-in tasks like compileJava, test, and build.</li>'
       +'<li style="margin-bottom:6px;"><code>group</code> and <code>version</code> — the direct equivalent of Maven\'s groupId and version tags.</li>'
@@ -1542,36 +1817,66 @@ const CHAPTERS = [
       +'<li style="margin-bottom:6px;"><code>dependencies { testImplementation \'...\' }</code> — the one JUnit dependency again, written as a single compact string instead of nested XML tags.</li>'
       +'</ul>Save as <code>build.gradle</code> in the project root, and <code>./gradlew test</code> already knows how to find and use it.',
      code:'plugins {\n    id \'java\'\n}\n\ngroup = \'com.example\'\nversion = \'1.0.0\'\n\nrepositories {\n    mavenCentral()\n}\n\ndependencies {\n    testImplementation \'org.junit.jupiter:junit-jupiter:5.10.0\'\n}\n\ntest {\n    useJUnitPlatform()\n}'},
-    {name:'A complete Makefile, explained line by line', explain:'Maven and Gradle are Java-specific. Make is older, far more general-purpose, and still shows up constantly — especially wrapping Docker commands, or in projects that are not pure Java at all. A Makefile is just a list of named shortcuts for commands you would otherwise have to type out in full, every time. Walk through this one: <ul style="margin:10px 0 0 18px; padding:0;">'
+
+    {divider:'Make'},
+    {name:'What Make is, and why it still matters', explain:'Maven and Gradle are Java-specific. Make is older, far more general-purpose, and still shows up constantly — wrapping Docker commands, gluing together multi-language projects, or standing in for a full build tool on something small. Instead of typing a full command like "mvn test" every time, a Makefile lets you define a short target once, then just type "make test" from then on.', code:'// instead of typing this every time:\nmvn test\n\n// define it once in a Makefile as a target named "test",\n// then just run:\nmake test'},
+    {name:'A complete Makefile, explained line by line', explain:'A Makefile is a list of named shortcuts for commands you would otherwise have to type out in full, every time. Walk through this one: <ul style="margin:10px 0 0 18px; padding:0;">'
       +'<li style="margin-bottom:6px;"><code>build:</code> — this is a "target". Typing <code>make build</code> in a terminal runs everything indented underneath it.</li>'
-      +'<li style="margin-bottom:6px;">The indented line under it, <code>javac -d out src/main/java/chat/*.java</code>, is the ACTUAL command — the exact same one from the capstone chapter, just given a short name.</li>'
+      +'<li style="margin-bottom:6px;">The indented line under it, <code>javac -d out src/main/java/chat/*.java</code>, is the ACTUAL command — the exact same one from the capstones chapter, just given a short name.</li>'
       +'<li style="margin-bottom:6px;"><code>run: build</code> — the word after the colon is a dependency. This says "before running \'run\', always run \'build\' first" — so <code>make run</code> alone compiles AND runs, in the right order, automatically.</li>'
       +'<li style="margin-bottom:6px;"><code>test:</code> — another independent target; <code>make test</code> runs only the test command, nothing else.</li>'
-      +'<li style="margin-bottom:6px;"><code>clean:</code> — deletes the out/ folder, a common shortcut before a fresh rebuild, mirroring "mvn clean" from the Maven lifecycle above.</li>'
-      +'<li style="margin-bottom:6px;"><code>.PHONY: build run test clean</code> — this line is easy to forget and worth remembering: it tells Make that these words are ACTIONS, not real files it should check for on disk. Without it, if a file literally named "clean" ever existed in the folder, Make would get confused and refuse to run.</li>'
+      +'<li style="margin-bottom:6px;"><code>clean:</code> — deletes the out/ folder, a common shortcut before a fresh rebuild, mirroring "mvn clean" above.</li>'
+      +'<li style="margin-bottom:6px;"><code>rebuild: clean build</code> — a dependency can list MORE than one target; this runs clean first, then build, giving you a genuinely fresh build in one command.</li>'
+      +'<li style="margin-bottom:6px;"><code>.PHONY: build run test clean rebuild</code> — this line is easy to forget and worth remembering: it tells Make that these words are ACTIONS, not real files it should check for on disk. Without it, if a file literally named "clean" ever existed in the folder, Make would get confused and refuse to run.</li>'
       +'</ul><b>The one gotcha that trips up almost everyone the first time:</b> the command line under each target MUST be indented with a real TAB character, not spaces. A text editor that quietly converts tabs to spaces will break every Makefile you write with a confusing "missing separator" error — this is the single most common first-time Makefile mistake there is.',
-     code:'build:\n\tjavac -d out src/main/java/chat/*.java\n\nrun: build\n\tjava -cp out chat.ChatServer\n\ntest:\n\tmvn test\n\nclean:\n\trm -rf out\n\n.PHONY: build run test clean'},
-    {name:"Maven's build lifecycle", explain:'Maven runs through ordered phases: validate, compile, test, package, install, deploy. Running a later phase automatically runs every phase before it too — running "package" also compiles and tests first.', code:'validate -> compile -> test -> package -> install -> deploy'},
-    {name:'Dependency scopes', explain:'Not every dependency is needed the same way: "compile" scope is needed everywhere, "test" scope is only needed for running tests, and "provided" scope is available while building but expected to already exist wherever the app actually runs.', code:'<scope>test</scope>'},
-    {name:'Where dependencies come from', explain:'When you declare a dependency, the build tool first checks your local cache on your own machine. If it is not there yet, it downloads it from a remote repository, like Maven Central, and caches it locally for next time.', code:'// local cache first, then a remote repository like Maven Central'},
-    {name:'Semantic versioning', explain:'Most libraries use version numbers like 2.4.1, following MAJOR.MINOR.PATCH. A MAJOR bump can break things, MINOR adds features safely, and PATCH is just bug fixes — reading a version number this way tells you how risky an upgrade might be.', code:'2.4.1\n// MAJOR . MINOR . PATCH'},
-    {name:'Multi-module projects', explain:'Larger projects are often split into several smaller modules (like an "api" module and a "core" module) that build together but can be developed and tested somewhat independently — a parent pom.xml or settings.gradle ties them together.', code:'// settings.gradle\ninclude "api", "core"'},
-    {name:'Build profiles', explain:'A profile lets you switch build settings depending on context — like using a different database URL for a local build versus a production one — without maintaining two entirely separate build files.', code:'<profiles>\n  <profile>\n    <id>production</id>\n  </profile>\n</profiles>'},
-    {name:'Clean builds', explain:'mvn clean (or ./gradlew clean) deletes previously built files before rebuilding from scratch — useful when something feels stale or broken and you want to rule out leftover build artifacts as the cause.', code:'mvn clean install'}
+     code:'.PHONY: build run test clean rebuild\n\nbuild:\n\tjavac -d out src/main/java/chat/*.java\n\nrun: build\n\tjava -cp out chat.ChatServer\n\ntest:\n\tmvn test\n\nclean:\n\trm -rf out\n\nrebuild: clean build'},
+    {name:'The full chain, start to finish', explain:'It is easy to lose track of how these pieces actually connect once a project has all of them at once. Typing "make test" sets off a short chain: Make reads the Makefile, finds the "test" target, and runs the real command written underneath it — which happens to be a Maven command, which Maven then carries out using the configuration in pom.xml, against your actual Java project.', code:'make test\n   |\n   v\nMakefile          (finds the "test" target)\n   |\n   v\nmvn test          (the real command underneath it)\n   |\n   v\nMaven             (reads pom.xml, runs the tests)\n   |\n   v\nYour Java project'}
   ],
+  interview:[
+    {level:'Beginner', q:'What is a build script?'},
+    {level:'Beginner', q:'Why do teams use build scripts instead of typing commands by hand?'},
+    {level:'Beginner', q:'What is Maven, and what does the mvn command do?'},
+    {level:'Beginner', q:'What is a pom.xml file for?'},
+    {level:'Beginner', q:'What is a Makefile?'},
+    {level:'Beginner', q:'What does mvn clean do? What about mvn compile, mvn test, and mvn package?'},
+    {level:'Intermediate', q:'What is the difference between a build tool and a build script?'},
+    {level:'Intermediate', q:'Explain, in your own words, how make test, a Makefile, and Maven relate to each other.'},
+    {level:'Intermediate', q:'What is a Maven dependency, and what is a Maven plugin?'},
+    {level:'Intermediate', q:'What is the Maven build lifecycle, and why does running "package" also run "test" first?'},
+    {level:'Intermediate', q:'What happens when you run mvn clean package?'},
+    {level:'Intermediate', q:'What does a -SNAPSHOT version number mean?'},
+    {level:'Intermediate', q:'Explain MAJOR.MINOR.PATCH — when would you bump each one?'},
+    {level:'Intermediate', q:'Why might a developer wrap Maven commands in a Makefile instead of just running mvn directly?'}
+  ],
+  project:{
+    title:'Student System — a real, working build setup',
+    blurb:'Build a small "student-system" Java project with a genuine Maven setup and a Makefile wrapping it — the exact combination this chapter covers, applied for real instead of typed as isolated answers.',
+    requirements:[
+      'A Maven project with at least 3 small Java classes and at least 3 JUnit tests.',
+      'A working pom.xml with correct groupId, artifactId, version, and a JUnit dependency.',
+      'mvn compile, mvn test, and mvn package all succeed without errors.',
+      'A Makefile in the project root with clean, compile, test, package, build, and rebuild targets, all correctly tab-indented.',
+      'make rebuild performs a genuinely clean build — delete the target/ folder by hand first and confirm make rebuild restores it.',
+      'A short README.md explaining how to build and run the project using both plain mvn commands and the Makefile shortcuts.'
+    ]
+  },
   challenges:[
     {p:'Write a Maven <span class="inline-code">&lt;dependency&gt;</span> block that adds JUnit to a pom.xml.',
      checks:[{l:'Has <dependency> tags', t:/<dependency>[\s\S]*<\/dependency>/i},{l:'Mentions junit', t:/junit/i}],
      s:'<dependency>\n  <groupId>junit</groupId>\n  <artifactId>junit</artifactId>\n  <version>4.13.2</version>\n</dependency>',
      m:['Forgetting the closing </dependency> tag — pom.xml is XML, and every tag needs a matching close.','Leaving out the version, which can make the build pick an unexpected one.']},
-    {p:'Write the <span class="inline-code">&lt;groupId&gt;</span>, <span class="inline-code">&lt;artifactId&gt;</span>, and <span class="inline-code">&lt;version&gt;</span> block identifying a whole Maven project.',
-     checks:[{l:'Has groupId', t:/<groupId>/i},{l:'Has artifactId', t:/<artifactId>/i},{l:'Has version', t:/<version>/i}],
-     s:'<groupId>com.example</groupId>\n<artifactId>my-app</artifactId>\n<version>1.0.0</version>',
-     m:['Using spaces in the artifactId — it usually should not contain spaces.','Forgetting a version tag entirely, which most tools require to identify a specific build.']},
+    {p:'Write the <span class="inline-code">&lt;modelVersion&gt;</span>, <span class="inline-code">&lt;groupId&gt;</span>, <span class="inline-code">&lt;artifactId&gt;</span>, and <span class="inline-code">&lt;version&gt;</span> block identifying a whole Maven project.',
+     checks:[{l:'Has modelVersion', t:/<modelVersion>/i},{l:'Has groupId', t:/<groupId>/i},{l:'Has artifactId', t:/<artifactId>/i},{l:'Has version', t:/<version>/i}],
+     s:'<modelVersion>4.0.0</modelVersion>\n<groupId>com.example</groupId>\n<artifactId>my-app</artifactId>\n<version>1.0.0</version>',
+     m:['Forgetting modelVersion — nearly every real pom.xml keeps it fixed at 4.0.0.','Using spaces in the artifactId — it usually should not contain spaces.']},
     {p:'Write a Gradle dependency line adding JUnit as a test dependency.',
      checks:[{l:'Uses testImplementation', t:/testImplementation/i},{l:'Mentions junit', t:/junit/i}],
      s:"testImplementation 'junit:junit:4.13.2'",
      m:['Using implementation instead of testImplementation — that would bundle a test-only library into the actual shipped app.','Missing one of the three colon-separated parts (group:artifact:version).']},
+    {p:'Write the Maven command that removes previously generated build files.',
+     checks:[{l:'mvn clean', t:/mvn\s+clean(?!\s+package)/i}],
+     s:'mvn clean',
+     m:['Confusing mvn clean with rm -rf — mvn clean specifically knows to remove Maven\'s own build output (usually under target/), nothing more.','Forgetting this only clears build output, not your actual source code.']},
     {p:'Write the Maven command that compiles a project without running tests.',
      checks:[{l:'mvn compile', t:/mvn\s+compile/i}],
      s:'mvn compile',
@@ -1584,6 +1889,14 @@ const CHAPTERS = [
      checks:[{l:'mvn package', t:/mvn\s+package/i}],
      s:'mvn package',
      m:['Expecting mvn package to skip tests — by default it runs them first, and a failing test stops the whole package step.','Looking for the resulting jar in the wrong folder — Maven puts it under target/ by default.']},
+    {p:'Write a code comment explaining, in your own words, what <span class="inline-code">mvn clean package</span> does and why someone would run it instead of just <span class="inline-code">mvn package</span>.',
+     checks:[{l:'Mentions clean', t:/clean/i},{l:'Mentions package', t:/package/i},{l:'Gives a reason', t:/because|since|stale|fresh|old|leftover/i}],
+     s:'// mvn clean package wipes out any old build files first, then does a fresh package build —\n// useful when something feels stale or broken and you want to rule out leftover files as the cause',
+     m:['Describing what each word means separately without explaining WHY someone chains them together.','Assuming clean and package always have to be run together — most of the time plain mvn package is enough.']},
+    {p:'A developer runs <span class="inline-code">mvn test</span> and a test fails. Write a comment explaining what they should do before running <span class="inline-code">mvn package</span>.',
+     checks:[{l:'Mentions fixing/investigating the failure', t:/fix|investigate|debug|figure out/i},{l:'Mentions not packaging yet', t:/before|first|not yet|don\'t package|package/i}],
+     s:'// Fix (or at least understand) why the test is failing before packaging —\n// mvn package runs the tests again anyway, so a real failure will just stop the build there too',
+     m:['Suggesting they skip the test to package anyway — that ships code you already know is broken.','Assuming the failure will just go away on the next run without any investigation.']},
     {p:'Write the Gradle command that builds the whole project.',
      checks:[{l:'gradle build or ./gradlew build', t:/gradle(w)?\s+build|\.\/gradlew\s+build/i}],
      s:'./gradlew build',
@@ -1607,7 +1920,23 @@ const CHAPTERS = [
     {p:'Write a Makefile with a <span class="inline-code">run</span> target that depends on <span class="inline-code">build</span> (so <span class="inline-code">make run</span> always builds first), then runs <span class="inline-code">java Main</span>.',
      checks:[{l:'Has run: build (a dependency)', t:/^run:\s*build/im},{l:'Runs java Main', t:/java Main/i}],
      s:'build:\n\tjavac Main.java\n\nrun: build\n\tjava Main',
-     m:['Writing "run:" with no dependency listed — without "build" after the colon, make run will try to run Main before it has even been compiled.','Forgetting the run target still needs its own tab-indented command line below it.']}
+     m:['Writing "run:" with no dependency listed — without "build" after the colon, make run will try to run Main before it has even been compiled.','Forgetting the run target still needs its own tab-indented command line below it.']},
+    {p:'Write a Makefile with <span class="inline-code">clean</span>, <span class="inline-code">compile</span>, <span class="inline-code">test</span>, and <span class="inline-code">package</span> targets that each run the matching Maven command, plus a <span class="inline-code">.PHONY</span> line listing all four.',
+     checks:[{l:'Has .PHONY listing the targets', t:/\.PHONY:.*clean.*compile.*test.*package/i},{l:'clean target runs mvn clean', t:/clean:\n\tmvn clean/},{l:'compile target runs mvn compile', t:/compile:\n\tmvn compile/},{l:'test target runs mvn test', t:/test:\n\tmvn test/},{l:'package target runs mvn package', t:/package:\n\tmvn package/}],
+     s:'.PHONY: clean compile test package\n\nclean:\n\tmvn clean\n\ncompile:\n\tmvn compile\n\ntest:\n\tmvn test\n\npackage:\n\tmvn package',
+     m:['Forgetting .PHONY entirely — harmless on a small project, but a bad habit that eventually causes a confusing failure on a real one.','Mixing up the order of words in .PHONY with the actual target names below — they need to match exactly.']},
+    {p:'Add <span class="inline-code">build</span> and <span class="inline-code">rebuild</span> targets to a Makefile, where build runs <span class="inline-code">mvn package</span> and rebuild depends on both <span class="inline-code">clean</span> and <span class="inline-code">build</span>.',
+     checks:[{l:'build target runs mvn package', t:/build:\n\tmvn package/},{l:'rebuild depends on clean and build', t:/rebuild:\s*clean\s+build/i}],
+     s:'build:\n\tmvn package\n\nrebuild: clean build',
+     m:['Giving rebuild its own command instead of listing clean and build as dependencies — that duplicates logic instead of reusing the targets you already wrote.','Listing the dependencies in the wrong order — clean should run before build, so it needs to come first.']},
+    {p:'Given the version <span class="inline-code">1.2.3</span>, write three comment lines showing the new version number after: a bug fix, a new feature, and a breaking change.',
+     checks:[{l:'Shows 1.2.4 (patch)', t:/1\.2\.4/},{l:'Shows 1.3.0 (minor)', t:/1\.3\.0/},{l:'Shows 2.0.0 (major)', t:/2\.0\.0/}],
+     s:'// bug fix (PATCH):     1.2.3 -> 1.2.4\n// new feature (MINOR): 1.2.3 -> 1.3.0\n// breaking change (MAJOR): 1.2.3 -> 2.0.0',
+     m:['Bumping the wrong segment — a new feature resets PATCH back to 0, it does not just increment it.','Forgetting a MAJOR bump resets BOTH minor and patch back to zero, not just major itself.']},
+    {p:'Write a code comment explaining the chain: running <span class="inline-code">make test</span> leads to the Makefile, which leads to <span class="inline-code">mvn test</span>, which leads to Maven actually running the tests.',
+     checks:[{l:'Mentions make test', t:/make test/i},{l:'Mentions Makefile', t:/Makefile/i},{l:'Mentions mvn test', t:/mvn test/i},{l:'Mentions Maven', t:/Maven/i}],
+     s:'// make test -> reads the Makefile -> finds the "test" target ->\n// runs "mvn test" underneath it -> Maven actually runs the tests',
+     m:['Skipping a step in the chain — each link (make, Makefile, mvn, Maven) matters for understanding what actually executes.','Assuming Make and Maven are the same tool — Make is only calling Maven here, not replacing it.']}
   ]
 },
 
@@ -1629,6 +1958,25 @@ const CHAPTERS = [
     {name:'Composition over inheritance', explain:'A common piece of advice: prefer giving a class a reference to another object ("has-a", composition) over extending it ("is-a", inheritance), when the relationship is not truly a strict type hierarchy. It keeps classes more flexible and easier to change later.', code:'class Car {\n    private Engine engine; // has-a Engine, not extends Engine\n}'},
     {name:'SOLID, briefly', explain:'SOLID is a set of five widely referenced OOP design guidelines: Single responsibility (a class should do one thing), Open/closed (open to extension, closed to modification), Liskov substitution (subclasses should be usable wherever their parent is expected), Interface segregation (prefer small, focused interfaces), and Dependency inversion (depend on abstractions, not concrete details).', code:'// S ingle responsibility   O pen/closed\n// L iskov substitution      I nterface segregation\n// D ependency inversion'}
   ],
+  interview:[
+    {level:'Beginner', q:'What is the difference between a class and an object?'},
+    {level:'Beginner', q:'What does encapsulation mean?'},
+    {level:'Beginner', q:'What is a constructor?'},
+    {level:'Intermediate', q:'What is the difference between overloading and overriding?'},
+    {level:'Intermediate', q:'What is the difference between an abstract class and an interface?'},
+    {level:'Intermediate', q:'What is polymorphism, with a concrete example?'},
+    {level:'Intermediate', q:'What does "composition over inheritance" mean, and why do many developers prefer it?'}
+  ],
+  project:{
+    title:'A Small Zoo Simulation',
+    blurb:'Model an Animal hierarchy with at least two subclasses, demonstrating inheritance, polymorphism, and encapsulation together in one small program.',
+    requirements:[
+      'An abstract Animal class with a private name field and an abstract makeSound() method.',
+      'At least two subclasses (like Dog and Cat) that each override makeSound() differently.',
+      'A List<Animal> containing a mix of both types, looped through and calling makeSound() polymorphically.',
+      'At least one class using composition (an Animal "has-a" something, not "is-a" something).'
+    ]
+  },
   challenges:[
     {p:'Write a class <span class="inline-code">Dog</span> with a private <span class="inline-code">String name</span> field and a constructor that sets it.',
      checks:[{l:'Class Dog', t:/class\s+Dog/i},{l:'private String name', t:/private\s+String\s+name/i},{l:'Has a Dog(...) constructor', t:/Dog\s*\(\s*String/i}],
@@ -1689,6 +2037,24 @@ const CHAPTERS = [
     {name:'Test doubles: stub, mock, and fake', explain:'These three are all "fake" stand-ins for a real dependency, but they mean slightly different things: a stub returns canned answers with no real logic, a mock also checks HOW it was called (like "was save() called exactly once?"), and a fake has a simplified but working implementation, like an in-memory database standing in for a real one.', code:'// stub: always returns the same canned value\n// mock: also verifies it was called correctly\n// fake: a working, simplified version'},
     {name:'TDD and BDD', explain:'TDD focuses on one small unit of code at a time, driven by the developer. BDD (covered more in the Acceptance Testing chapter) applies a similar red-then-green rhythm, but at the level of whole features, described in language the rest of the team can read too.', code:'// TDD: one method at a time, developer-facing\n// BDD: one feature at a time, whole-team-facing'}
   ],
+  interview:[
+    {level:'Beginner', q:'What does "red, green, refactor" mean?'},
+    {level:'Beginner', q:'Why do you write the test before the code in TDD?'},
+    {level:'Intermediate', q:'What is the Arrange-Act-Assert pattern?'},
+    {level:'Intermediate', q:'What is the testing pyramid, and why are there more unit tests than end-to-end tests?'},
+    {level:'Intermediate', q:'What is the difference between a mock, a stub, and a fake?'},
+    {level:'Intermediate', q:'What is one real trade-off of practicing TDD?'}
+  ],
+  project:{
+    title:'A Test-First String Utility',
+    blurb:'Build a small StringUtils class entirely test-first — write each failing test before any implementation exists, one small behavior at a time.',
+    requirements:[
+      'At least 4 full red-green-refactor cycles, each adding one method (like isPalindrome, reverse, or countVowels).',
+      'Every method has its test written and confirmed failing before the implementation exists.',
+      'At least one refactor step that changes code structure without changing test results.',
+      'A short written log of each red-green-refactor cycle you went through.'
+    ]
+  },
   challenges:[
     {p:'Write a failing test FIRST for a method <span class="inline-code">add(2, 3)</span> on a Calculator class that does not exist yet, expecting 5.',
      checks:[{l:'Has @Test', t:/@Test/i},{l:'Calls add(2, 3)', t:/add\s*\(\s*2\s*,\s*3\s*\)/i},{l:'Uses assertEquals(5', t:/assertEquals\s*\(\s*5/i}],
@@ -1749,6 +2115,24 @@ const CHAPTERS = [
     {name:'Writing good acceptance criteria', explain:'Good criteria describe an observable outcome, not an implementation detail — "the user sees an error message" is testable and durable; "the code calls validateInput()" is not, and will break the moment the implementation changes.', code:'// good: the user sees an error message\n// too implementation-specific: validateInput() returns false'},
     {name:'Where acceptance tests fit in the pyramid', explain:'Acceptance and end-to-end tests sit at the top of the testing pyramid mentioned in the TDD chapter — valuable, but slower and more expensive to run than unit tests, so teams usually write far fewer of them and rely on unit tests for most day-to-day coverage.', code:'// few acceptance/end-to-end tests, on top of many fast unit tests underneath'}
   ],
+  interview:[
+    {level:'Beginner', q:'What is the difference between a unit test and an acceptance test?'},
+    {level:'Beginner', q:'What do Given, When, and Then each represent in Gherkin?'},
+    {level:'Intermediate', q:'What is BDD, and how does it relate to acceptance testing?'},
+    {level:'Intermediate', q:'What is the difference between acceptance testing and User Acceptance Testing (UAT)?'},
+    {level:'Intermediate', q:'What is a Scenario Outline, and when would you use one?'},
+    {level:'Intermediate', q:'Why should acceptance criteria describe behavior, not implementation?'}
+  ],
+  project:{
+    title:'Acceptance Scenarios for a Login Feature',
+    blurb:'Write a complete .feature file with multiple Gherkin scenarios covering both a successful and a failed login, from a user\'s point of view.',
+    requirements:[
+      'A Feature: line naming the feature clearly.',
+      'At least 3 scenarios: successful login, wrong password, and a locked account.',
+      'Every scenario follows a proper Given/When/Then structure.',
+      'A short list of acceptance criteria, in your own words, that these scenarios are meant to prove.'
+    ]
+  },
   challenges:[
     {p:'Write a Given/When/Then scenario, in plain Gherkin text, for logging in with correct credentials.',
      checks:[{l:'Has Given', t:/Given/i},{l:'Has When', t:/When/i},{l:'Has Then', t:/Then/i}],
@@ -1889,6 +2273,24 @@ const CHAPTERS = [
     {name:'How a dependency becomes usable code', explain:'Declaring a dependency in pom.xml or build.gradle (from the Build Scripts chapter) is what makes an import statement for an outside library actually resolve — the build tool downloads the library\'s jar file and puts it on the classpath before your code ever compiles.', code:'<dependency>\n  <groupId>com.fasterxml.jackson.core</groupId>\n  <artifactId>jackson-databind</artifactId>\n  <version>2.16.0</version>\n</dependency>'},
     {name:'How to explore a library you have never used', explain:'Start with its official Javadocs for the exact method signatures, check Maven Central for the current version number, and skim its README or getting-started guide for the two or three most common usage patterns before diving into every feature.', code:'// search: "<library name> maven central" and "<library name> javadoc"'}
   ],
+  interview:[
+    {level:'Beginner', q:'What is the difference between an ArrayList and a HashMap?'},
+    {level:'Beginner', q:'What is the Java standard library?'},
+    {level:'Intermediate', q:'What does the Streams API let you do that a regular for loop does not, conceptually?'},
+    {level:'Intermediate', q:'What is Optional, and what problem does it solve?'},
+    {level:'Intermediate', q:'What is the difference between the Java standard library and an outside library like Jackson or Guava?'},
+    {level:'Intermediate', q:'What does an ExecutorService do that raw Thread objects do not?'}
+  ],
+  project:{
+    title:'A Word Frequency Counter',
+    blurb:'Read a block of text and count how often each word appears, using at least one Collection, one Stream operation, and clean formatting of the output.',
+    requirements:[
+      'Splits input text into individual words.',
+      'Uses a Map to count occurrences of each word.',
+      'Uses at least one Stream operation (like sorted, filter, or map) to process the results.',
+      'Prints the top 5 most frequent words, sorted by count.'
+    ]
+  },
   challenges:[
     {p:'Import ArrayList, create one, add three strings to it, and print its size().',
      checks:[{l:'Imports ArrayList', t:/import\s+java\.util\.ArrayList/i},{l:'Creates an ArrayList', t:/new\s+ArrayList/i},{l:'Calls .add( at least 3 times', t:c=>((c.match(/\.add\s*\(/g)||[]).length>=3)},{l:'Calls .size()', t:/\.size\s*\(\s*\)/i}],
@@ -1950,6 +2352,24 @@ const CHAPTERS = [
     {name:'Writing a good commit message', explain:'A commit message that starts with a short type like fix:, feat:, or docs:, followed by a plain description, is easy to scan in history and is often what changelog tools use to generate the CHANGELOG automatically.', code:'fix: correct null pointer when login field is empty\nfeat: add dark mode toggle to settings'},
     {name:'The LICENSE file', explain:"A LICENSE file states, legally, what other people are allowed to do with your code — use it, modify it, sell it, or nothing at all. MIT is short and permissive; Apache 2.0 is similar but adds patent protection; leaving it out at all technically means nobody else has any rights to reuse it.", code:'MIT License\n\nCopyright (c) 2026 Your Name\n\nPermission is hereby granted, free of charge, ...'}
   ],
+  interview:[
+    {level:'Beginner', q:'What is a README file for?'},
+    {level:'Beginner', q:'What are the standard sections of a good README?'},
+    {level:'Intermediate', q:'What is the "Keep a Changelog" format, and what are its standard categories?'},
+    {level:'Intermediate', q:'What is the difference between a README and a CONTRIBUTING.md file?'},
+    {level:'Intermediate', q:'Why does a LICENSE file matter even for a small personal project?'},
+    {level:'Intermediate', q:'What is the purpose of a .gitignore file?'}
+  ],
+  project:{
+    title:'Document One of Your Own Projects Properly',
+    blurb:'Take any project you have already built in this notebook and write a genuinely complete set of documentation for it.',
+    requirements:[
+      'A README.md with title, description, installation, and usage sections, each with real content.',
+      'A CHANGELOG.md following the Keep a Changelog format with at least an [Unreleased] section.',
+      'A LICENSE file with a real license (like MIT) filled in.',
+      'A .gitignore appropriate for a Java project.'
+    ]
+  },
   challenges:[
     {p:'Write a README title (with a # header) and a one-sentence description underneath it.',
      checks:[{l:'Has a # header', t:/^#\s+\S+/m},{l:'Has a description line after it', t:c=>c.split('\n').filter(l=>l.trim().length>0).length>=2}],
@@ -2012,6 +2432,24 @@ const CHAPTERS = [
     {name:'Standups', explain:'A daily standup is a short, time-boxed sync — often exactly three questions: what did I do yesterday, what will I do today, and is anything blocking me. It is meant to surface problems fast, not to be a full status meeting.', code:'Yesterday: fixed the login bug\nToday: start the search filter\nBlockers: none'},
     {name:'Definition of Done', explain:'A shared, written checklist the whole team agrees a piece of work has to satisfy before it counts as finished — code written, tests passing, reviewed, and deployed, for example — so "done" means the same thing to everyone instead of being a personal judgment call.', code:'// Definition of Done:\n// - code written and reviewed\n// - tests passing\n// - deployed to staging'}
   ],
+  interview:[
+    {level:'Beginner', q:'What is a user story, and what format does it usually follow?'},
+    {level:'Beginner', q:'What is a sprint?'},
+    {level:'Intermediate', q:'What are the three core Scrum roles, and what does each one do?'},
+    {level:'Intermediate', q:'What is the difference between a sprint retrospective and a sprint review?'},
+    {level:'Intermediate', q:'What is the difference between Scrum and Kanban?'},
+    {level:'Intermediate', q:'What is a Definition of Done, and why does a team need one?'}
+  ],
+  project:{
+    title:'Plan a Small Feature Like a Real Team Would',
+    blurb:'Take one feature idea (like "dog shelter search by age") and write out the full planning artifacts a real Agile team would produce before writing any code.',
+    requirements:[
+      'At least 3 user stories in "As a... I want... so that..." format.',
+      'Acceptance criteria for each story.',
+      'A one-sentence sprint goal covering all three stories.',
+      'A Definition of Done checklist that applies to all of them.'
+    ]
+  },
   challenges:[
     {p:'Write a user story using the "As a / I want / so that" template, for a search feature.',
      checks:[{l:'Starts with "As a"', t:/As\s+an?\s+\S+/i},{l:'Has "I want"', t:/I want/i},{l:'Has "so that"', t:/so that/i}],
@@ -2071,6 +2509,24 @@ const CHAPTERS = [
     {name:'Labels vs columns', explain:'Labels (like bug, priority:high, or good-first-issue) categorize WHAT a card is, while the column represents its current STATUS. A single card usually carries several labels but sits in exactly one column at a time.', code:'labels: bug, priority:high\ncolumn: In Progress'},
     {name:'Linking commits and pull requests to issues', explain:'Both GitHub and GitLab recognize special keywords in a commit message or pull/merge request description — like "Closes #42" or "Fixes #42" — and will automatically close that issue the moment the change is merged, keeping the board accurate without extra manual clicking.', code:'fix: correct validation on empty password field\n\nCloses #42'}
   ],
+  interview:[
+    {level:'Beginner', q:'What is a task board, in plain terms?'},
+    {level:'Beginner', q:'What do the columns To Do, In Progress, and Done usually represent?'},
+    {level:'Intermediate', q:'What is the difference between a GitHub Issue and a GitHub Project board?'},
+    {level:'Intermediate', q:'What does writing "Closes #12" in a commit message actually do?'},
+    {level:'Intermediate', q:'What is a WIP limit, and why would a team deliberately slow itself down with one?'},
+    {level:'Intermediate', q:'What is the difference between a board and a backlog?'}
+  ],
+  project:{
+    title:'Run a Real Board for a Small Project',
+    blurb:'Set up a genuine GitHub Project (or GitLab Issue Board) for one of your own repositories and use it for at least one real week of work.',
+    requirements:[
+      'At least 4 columns matching real stages of work.',
+      'At least 6 cards created from real GitHub/GitLab Issues, not just text notes.',
+      'At least one commit message that uses "Closes #<number>" to link to a real issue.',
+      'A short reflection on what moving cards actually changed about how you worked.'
+    ]
+  },
   challenges:[
     {p:'Write a GitHub issue title and body describing a bug report, including a "Steps to reproduce" section.',
      checks:[{l:'Has a title-like first line', t:c=>c.trim().length>0},{l:'Mentions "Steps to reproduce"', t:/Steps to reproduce/i},{l:'Mentions "Expected"', t:/Expected/i}],
@@ -2131,6 +2587,24 @@ const CHAPTERS = [
     {name:'SDLC models: Waterfall vs Agile vs V-Model', explain:'Waterfall moves through these six phases once, in strict order. Agile repeats a small version of all six phases every sprint. The V-Model pairs each development phase with a matching testing phase planned at the same time (requirements paired with acceptance testing, design paired with integration testing, and so on).', code:'// Waterfall: 6 phases, once\n// Agile: 6 phases, repeated every sprint\n// V-Model: each phase paired with a matching test phase'},
     {name:'How SDLC, Agile, and this notebook all connect', explain:'SDLC describes WHAT phases exist. Agile/Scrum (from the Project Management chapter) describes HOW a team moves through those phases, in small repeating cycles instead of one long line. The Capstone chapters in this notebook are a compressed, personal version of the whole cycle — you gathered a tiny requirement, designed a structure, implemented it, tested it, and (in Capstone III) even packaged and automated its deployment.', code:'// SDLC = the phases that exist\n// Agile/Scrum = how a team paces through them\n// the Capstone chapters = you, doing a tiny version of all six, alone'}
   ],
+  interview:[
+    {level:'Beginner', q:'What does SDLC stand for?'},
+    {level:'Beginner', q:'Name the six phases of the SDLC in order.'},
+    {level:'Intermediate', q:'What is the key difference between the Waterfall and Agile models?'},
+    {level:'Intermediate', q:'Why does testing happen continuously in Agile instead of only once, near the end?'},
+    {level:'Intermediate', q:'What phase does writing a JUnit test usually belong to?'},
+    {level:'Intermediate', q:'When might Waterfall still be a reasonable choice over Agile?'}
+  ],
+  project:{
+    title:'Walk One Feature Through the Whole SDLC',
+    blurb:'Pick one small feature and produce a real artifact for every phase of the SDLC, showing the full journey from idea to shipped code.',
+    requirements:[
+      'A one-paragraph requirements document describing the feature and who it is for.',
+      'A short design note describing the main classes/structure you will use.',
+      'The actual implemented code for the feature.',
+      'At least one test proving it works, and a one-line "deployment note" describing how it would actually ship.'
+    ]
+  },
   challenges:[
     {p:'List the six SDLC phases, in order, as a comment.',
      checks:[{l:'Mentions Requirements', t:/Requirements/i},{l:'Mentions Design', t:/Design/i},{l:'Mentions Testing', t:/Testing/i},{l:'Mentions Deployment', t:/Deployment/i},{l:'Mentions Maintenance', t:/Maintenance/i}],
@@ -2375,6 +2849,38 @@ function renderLinks(ch){
   `;
 }
 
+function renderInterview(ch){
+  if(!ch.interview || !ch.interview.length) return '';
+  const beginner = ch.interview.filter(q=>q.level==='Beginner');
+  const inter = ch.interview.filter(q=>q.level==='Intermediate');
+  const group = (label, list) => list.length ? `
+    <h4 class="interview-level">${label}</h4>
+    <ul class="interview-list">${list.map(q=>`<li>${q.q}</li>`).join('')}</ul>
+  ` : '';
+  return `
+    <h3 class="section-label">Interview questions</h3>
+    <div class="interview-box">
+      <p class="interview-hint">Try answering these out loud, from memory, before checking back against the notes above.</p>
+      ${group('Beginner', beginner)}
+      ${group('Intermediate', inter)}
+    </div>
+  `;
+}
+
+function renderMiniProject(ch){
+  if(!ch.project) return '';
+  const p = ch.project;
+  const reqs = p.requirements.map(r=>`<li>${r}</li>`).join('');
+  return `
+    <h3 class="section-label">Mini project</h3>
+    <div class="mini-project">
+      <h4>${p.title}</h4>
+      <p class="concept-explain">${p.blurb}</p>
+      <ul class="proj-reqs">${reqs}</ul>
+    </div>
+  `;
+}
+
 function renderChapter(){
   const ch = CHAPTERS.find(c=>c.id===currentView);
   const chState = state[ch.id];
@@ -2469,6 +2975,8 @@ function renderChapter(){
       ${revealHtml}
     </div>
 
+    ${renderInterview(ch)}
+    ${renderMiniProject(ch)}
     ${renderLinks(ch)}
   `;
 
